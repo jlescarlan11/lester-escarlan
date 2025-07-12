@@ -1,89 +1,61 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import axios from "axios"
-import Breadcrumbs from "@/app/_components/common/Breadcrumbs"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { LuPlus } from "react-icons/lu"
-import { createColumns, Project } from "./columns"
-import { DataTable } from "./data-table"
-import { DeleteProjectModal } from "./_components/DeleteProjectModal"
+"use client";
+import Breadcrumbs from "@/app/_components/common/Breadcrumbs";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { DeleteProjectModal } from "./_components/DeleteProjectModal";
+import { createColumns, Project } from "./columns";
+import { DataTable } from "./data-table";
 
 const AdminProjectPage = () => {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [deleteModal, setDeleteModal] = useState<{
-    isOpen: boolean
-    projectId: string
-    projectTitle: string
-  }>({
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     projectId: "",
     projectTitle: "",
-  })
+  });
 
   const fetchProjects = async () => {
     try {
-      setLoading(true)
-      const response = await axios.get("/api/project")
+      setLoading(true);
+      const response = await axios.get("/api/project");
       if (response.data.success) {
-        setProjects(response.data.data)
+        setProjects(response.data.data);
       } else {
-        setError("Failed to fetch projects")
+        setError("Failed to fetch projects");
       }
-    } catch (err) {
-      console.error("Error fetching projects:", err)
-      setError("Failed to fetch projects")
+    } catch {
+      setError("Failed to fetch projects");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchProjects()
-  }, [])
-
-  const handleDeleteSuccess = () => {
-    // Refresh the projects list after successful deletion
-    fetchProjects()
-  }
+    fetchProjects();
+  }, []);
 
   const openDeleteModal = (projectId: string, projectTitle: string) => {
-    setDeleteModal({
-      isOpen: true,
-      projectId,
-      projectTitle,
-    })
-  }
+    setDeleteModal({ isOpen: true, projectId, projectTitle });
+  };
 
   const closeDeleteModal = () => {
-    setDeleteModal({
-      isOpen: false,
-      projectId: "",
-      projectTitle: "",
-    })
-  }
+    setDeleteModal({ isOpen: false, projectId: "", projectTitle: "" });
+  };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Breadcrumbs />
-          <h1 className="text-3xl font-bold tracking-tight mt-2">Project Management</h1>
+    <>
+      <div>
+        <Breadcrumbs />
+        <header>
+          <h1>Project Management</h1>
           <p className="text-muted-foreground">
             Manage your portfolio projects
           </p>
-        </div>
-        <Link href="/admin/project/create">
-          <Button>
-            <LuPlus className="mr-2 h-4 w-4" />
-            Add Project
-          </Button>
-        </Link>
+        </header>
       </div>
-
       <div className="space-y-4">
         {loading ? (
           <div className="flex items-center justify-center h-64">
@@ -96,8 +68,8 @@ const AdminProjectPage = () => {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <p className="text-destructive mb-2">{error}</p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => window.location.reload()}
               >
                 Try Again
@@ -108,16 +80,15 @@ const AdminProjectPage = () => {
           <DataTable columns={createColumns(openDeleteModal)} data={projects} />
         )}
       </div>
-
       <DeleteProjectModal
         isOpen={deleteModal.isOpen}
         onClose={closeDeleteModal}
         projectId={deleteModal.projectId}
         projectTitle={deleteModal.projectTitle}
-        onDeleteSuccess={handleDeleteSuccess}
+        onDeleteSuccess={fetchProjects}
       />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default AdminProjectPage
+export default AdminProjectPage;

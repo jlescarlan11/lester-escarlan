@@ -1,37 +1,38 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import Breadcrumbs from "@/app/_components/common/Breadcrumbs"
-import { ProjectForm } from "../_components/ProjectForm"
+import { useRouter } from "next/navigation";
+import Breadcrumbs from "@/app/_components/common/Breadcrumbs";
+import { ProjectForm } from "../_components/ProjectForm";
 
 const CreateProjectPage = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleCancel = () => {
-    router.push("/admin/project")
-  }
+    router.push("/admin/project");
+  };
 
   const handleSuccess = () => {
     // The form will handle the redirect
-  }
+  };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <>
       <div>
         <Breadcrumbs />
-        <h1 className="text-3xl font-bold tracking-tight mt-2">Create Project</h1>
-        <p className="text-muted-foreground">
-          Add a new project to your portfolio
-        </p>
+        <header>
+          <h1>Create Project</h1>
+          <p className="text-muted-foreground">
+            Add a new project to your portfolio
+          </p>
+        </header>
       </div>
-
       <ProjectForm
         mode="create"
         onCancel={handleCancel}
         onSuccess={handleSuccess}
       />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default CreateProjectPage
+export default CreateProjectPage;

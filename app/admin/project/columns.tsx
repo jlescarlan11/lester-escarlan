@@ -1,63 +1,78 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
+} from "@/components/ui/dropdown-menu";
+import { ColumnDef } from "@tanstack/react-table";
+import {
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  Edit,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
+import Link from "next/link";
 
 export type Project = {
-  id: string
-  title: string
-  description: string
-  technologies: string[]
-  link: string
-  status: "featured" | "archived"
-  preview: string | null
-  createdAt: string
-  updatedAt: string
-}
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  link: string;
+  status: "featured" | "archived";
+  preview: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export const createColumns = (onDelete: (projectId: string, projectTitle: string) => void): ColumnDef<Project>[] => [
+export const createColumns = (
+  onDelete: (projectId: string, projectTitle: string) => void
+): ColumnDef<Project>[] => [
   {
     accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        className="p-0!"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Title
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp className="ml-2 h-4 w-4" />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown className="ml-2 h-4 w-4" />
+        ) : (
+          <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+        )}
+      </Button>
+    ),
+    enableGlobalFilter: true,
   },
   {
     accessorKey: "description",
     header: "Description",
     cell: ({ row }) => {
-      const description = row.getValue("description") as string
+      const description = row.getValue("description") as string;
       return (
         <div className="max-w-[200px] truncate" title={description}>
           {description}
         </div>
-      )
+      );
     },
+    enableGlobalFilter: true,
   },
   {
     accessorKey: "technologies",
     header: "Technologies",
     cell: ({ row }) => {
-      const technologies = row.getValue("technologies") as string[]
+      const technologies = row.getValue("technologies") as string[];
       return (
         <div className="flex flex-wrap gap-1">
           {technologies.slice(0, 3).map((tech, index) => (
@@ -71,43 +86,56 @@ export const createColumns = (onDelete: (projectId: string, projectTitle: string
             </Badge>
           )}
         </div>
-      )
+      );
+    },
+    enableGlobalFilter: true,
+    filterFn: (row, id, value) => {
+      const technologies = row.getValue(id) as string[];
+      return technologies.some(tech => 
+        tech.toLowerCase().includes(value.toLowerCase())
+      );
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const status = row.getValue("status") as string;
       return (
         <Badge variant={status === "featured" ? "default" : "secondary"}>
           {status}
         </Badge>
-      )
+      );
     },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Created
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        className="p-0!"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Created
+        {column.getIsSorted() === "asc" ? (
+          <ArrowUp className="ml-2 h-4 w-4" />
+        ) : column.getIsSorted() === "desc" ? (
+          <ArrowDown className="ml-2 h-4 w-4" />
+        ) : (
+          <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+        )}
+      </Button>
+    ),
     cell: ({ row }) => {
-      const date = new Date(row.getValue("createdAt"))
-      return <div>{date.toLocaleDateString()}</div>
+      const date = new Date(row.getValue("createdAt"));
+      return <div>{date.toLocaleDateString()}</div>;
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const project = row.original
+      const project = row.original;
 
       return (
         <DropdownMenu>
@@ -125,7 +153,7 @@ export const createColumns = (onDelete: (projectId: string, projectTitle: string
                 Edit project
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="text-red-600"
               onClick={() => onDelete(project.id, project.title)}
             >
@@ -134,7 +162,7 @@ export const createColumns = (onDelete: (projectId: string, projectTitle: string
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-] 
+];
