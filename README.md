@@ -29,6 +29,42 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL="your-supabase-project-url"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
+
+# Next.js
+NEXTAUTH_SECRET="your-nextauth-secret"
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+## Supabase Setup
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Create a storage bucket named `project-preview` in your Supabase dashboard
+3. Set the bucket's privacy settings to allow public access for reading
+4. Add your Supabase URL and anon key to the environment variables
+
+## Database Setup
+
+1. Run the database migrations:
+```bash
+npx prisma migrate dev
+```
+
+2. Generate the Prisma client:
+```bash
+npx prisma generate
+```
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

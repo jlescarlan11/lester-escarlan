@@ -16,24 +16,6 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file && file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            autoCropToAspectRatio(img, 2, 1);
-          };
-          img.src = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    []
-  );
-
   const autoCropToAspectRatio = useCallback(
     (img: HTMLImageElement, targetWidth: number, targetHeight: number) => {
       if (!canvasRef.current) return;
@@ -61,8 +43,8 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         sy = (img.height - sh) / 2;
       }
 
-      // Calculate output dimensions maintaining reasonable quality
-      const maxOutputWidth = 1200; // Maximum output width
+      // Calculate output dimensions maintaining high quality
+      const maxOutputWidth = 1600; // Increased for better quality
       const outputWidth = Math.min(sw, maxOutputWidth);
       const outputHeight = outputWidth / targetAspectRatio;
 
@@ -78,7 +60,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
 
-      // Convert to blob
+      // Convert to blob with higher quality
       canvas.toBlob(
         (blob) => {
           if (blob && onCropComplete) {
@@ -86,10 +68,28 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
           }
         },
         "image/jpeg",
-        0.9
+        0.95
       );
     },
     [onCropComplete]
+  );
+
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            autoCropToAspectRatio(img, 2, 1);
+          };
+          img.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [autoCropToAspectRatio]
   );
 
   return (

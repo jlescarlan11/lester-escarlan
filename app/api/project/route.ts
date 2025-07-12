@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { prisma } from "@/prisma/client";
-import { z } from "zod";
+import { projectSchema } from "@/lib/schemas";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const projectSchema = z.object({
-  title: z.string().min(1, "Title is required").max(55, "Title must be 55 characters or less"),
-  description: z.string().min(1, "Description is required").max(255, "Description must be 255 characters or less"),
-  link: z.string().url("Please enter a valid URL (e.g., https://example.com)").optional(),
-  technology: z.string().min(1, "Technologies are required").max(200, "Technologies list is too long"),
-  status: z.enum(["featured", "archived"]).optional(),
-});
 
 // Initialize Supabase client
 const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -24,16 +16,16 @@ export async function POST(request: NextRequest) {
     const title = formData.get("title") as string | null;
     const description = formData.get("description") as string | null;
     const link = formData.get("link") as string | null;
-    const technology = formData.get("technology") as string | null;
+    const technology = formData.get("technologies") as string | null;
     const status = formData.get("status") as string | null;
     const image = formData.get("image") as File | null;
 
-    // Validate input
+    // Validate input using the shared schema, mapping technology field to technologies
     const validationResult = projectSchema.safeParse({
       title,
       description,
       link,
-      technology,
+      technologies: technology,
       status,
     });
     if (!validationResult.success) {
