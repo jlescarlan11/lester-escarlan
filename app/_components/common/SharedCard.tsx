@@ -1,7 +1,6 @@
-import Image from "next/image";
-import { LuArrowRight } from "react-icons/lu";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 interface SharedCardProps {
   logo: string;
