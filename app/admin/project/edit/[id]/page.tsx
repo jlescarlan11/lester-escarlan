@@ -21,12 +21,12 @@ const EditProjectPage = () => {
     <>
       <div>
         <Breadcrumbs />
-        <header>
+        <div>
           <h1>Edit Project</h1>
           <p className="text-muted-foreground">
             Update your project information
           </p>
-        </header>
+        </div>
       </div>
 
       <ProjectForm
