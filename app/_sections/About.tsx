@@ -25,7 +25,7 @@ const AboutSection = () => {
           ))}
 
           <p>{about.techStack.intro}</p>
-          <ul className="list-disc pl-5 grid grid-cols-4">
+          <ul className=" grid grid-cols-4">
             {about.techStack.techs.map((tech) => (
               <li key={tech} className="text-sm">
                 {tech}

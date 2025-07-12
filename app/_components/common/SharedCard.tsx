@@ -48,9 +48,8 @@ const SharedCard = ({
       </div>
       <ul className="space-y-1 mt-4">
         {details.map((detail, i) => (
-          <li key={i} className="flex items-start">
-            <LuArrowRight className="mr-2 text-primary mt-0.5 flex-shrink-0" />
-            <span className="text-sm leading-relaxed">{detail}</span>
+          <li key={i} className="">
+            {detail}
           </li>
         ))}
       </ul>
@@ -58,4 +57,4 @@ const SharedCard = ({
   </Card>
 );
 
-export default SharedCard; 
+export default SharedCard;
