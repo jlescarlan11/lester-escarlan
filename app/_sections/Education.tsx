@@ -4,12 +4,12 @@ import SharedCard from "../_components/common/SharedCard";
 
 const EducationSection = () => {
   return (
-    <section className="section">
+    <section id="education" className="section">
       <SectionTitle
         section={education.section}
         description={education.sectionDescription}
       />
-      <div className="grid lg:grid-cols-2 gap-x-8 gap-y-4">
+      <div className="space-y-6">
         {education.educationData.map((item, index) => (
           <SharedCard
             key={index}

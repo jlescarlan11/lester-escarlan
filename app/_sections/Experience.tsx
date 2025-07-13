@@ -4,12 +4,12 @@ import SharedCard from "../_components/common/SharedCard";
 
 const ExperienceSection = () => {
   return (
-    <section className="section">
+    <section id="experience" className="section">
       <SectionTitle
         section={experience.section}
         description={experience.sectionDescription}
       />
-      <div className="grid lg:grid-cols-2 gap-x-8 gap-y-4">
+      <div className="space-y-6 ">
         {experience.experienceData.map((item, index) => (
           <SharedCard
             key={index}

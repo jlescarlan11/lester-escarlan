@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Column,
 } from "@tanstack/react-table";
 import * as React from "react";
 
@@ -37,19 +38,70 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Search,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
 } from "lucide-react";
 import Link from "next/link";
 import { LuPlus } from "react-icons/lu";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+  technologies: string[];
+  link: string;
+  status: "featured" | "archived";
+  preview: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+interface ProjectDataTableProps {
+  data: Project[];
+  showActions?: boolean;
+  onDelete?: (projectId: string, projectTitle: string) => void;
+  showViewAction?: boolean;
+  showAddButton?: boolean;
+  addButtonHref?: string;
+  addButtonText?: string;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
+// Fixed: Added display name for ESLint compliance
+const SortableHeader = React.memo(
+  ({ title, column }: { title: string; column: Column<Project, unknown> }) => {
+    const sortDirection = column.getIsSorted();
+
+    return (
+      <Button
+        variant="ghost"
+        className="p-0"
+        onClick={() => column.toggleSorting(sortDirection === "asc")}
+      >
+        {title}
+        {sortDirection === "asc" ? (
+          <ArrowUp className="ml-2 h-4 w-4" />
+        ) : sortDirection === "desc" ? (
+          <ArrowDown className="ml-2 h-4 w-4" />
+        ) : (
+          <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+        )}
+      </Button>
+    );
+  }
+);
+
+SortableHeader.displayName = "SortableHeader";
+
+const ProjectDataTable = ({
   data,
-}: DataTableProps<TData, TValue>) {
+  showActions = false,
+  onDelete,
+  showViewAction = false,
+  showAddButton = false,
+  addButtonHref = "/admin/project/create",
+  addButtonText = "Add Project",
+}: ProjectDataTableProps) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -57,6 +109,129 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = React.useState("");
+
+  const columns: ColumnDef<Project>[] = React.useMemo(() => {
+    const baseColumns: ColumnDef<Project>[] = [
+      {
+        accessorKey: "title",
+        header: ({ column }) => (
+          <SortableHeader title="Title" column={column} />
+        ),
+        cell: ({ row }) => (
+          <div className="lowercase">{row.getValue("title") as string}</div>
+        ),
+        enableGlobalFilter: true,
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        cell: ({ row }) => (
+          <div className="max-w-[300px] break-words whitespace-normal lowercase">
+            {row.getValue("description") as string}
+          </div>
+        ),
+        enableGlobalFilter: true,
+      },
+      {
+        accessorKey: "technologies",
+        header: "Technologies",
+        cell: ({ row }) => {
+          const technologies = row.getValue("technologies") as string[];
+          return (
+            <div className="flex flex-wrap gap-1">
+              {technologies.slice(0, 3).map((tech, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="text-xs lowercase"
+                >
+                  {tech}
+                </Badge>
+              ))}
+              {technologies.length > 3 && (
+                <Badge variant="outline" className="text-xs">
+                  +{technologies.length - 3}
+                </Badge>
+              )}
+            </div>
+          );
+        },
+        enableGlobalFilter: true,
+        filterFn: (row, id, value) => {
+          const technologies = row.getValue(id) as string[];
+          return technologies.some((tech) =>
+            tech.toLowerCase().includes(value.toLowerCase())
+          );
+        },
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => {
+          const status = row.getValue("status") as string;
+          return (
+            <Badge
+              variant={status === "featured" ? "default" : "secondary"}
+              className="lowercase"
+            >
+              {status}
+            </Badge>
+          );
+        },
+        enableColumnFilter: true,
+      },
+      {
+        accessorKey: "createdAt",
+        header: ({ column }) => (
+          <SortableHeader title="Created" column={column} />
+        ),
+        cell: ({ row }) => {
+          const date = new Date(row.getValue("createdAt"));
+          return <div>{date.toLocaleDateString()}</div>;
+        },
+      },
+    ];
+
+    // Add actions column conditionally
+    if (showActions || showViewAction) {
+      baseColumns.push({
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const project = row.original;
+          return (
+            <div className="flex gap-2">
+              {showViewAction && (
+                <Link href={`/projects/${project.id}`}>
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                </Link>
+              )}
+              {showActions && onDelete && (
+                <>
+                  <Link href={`/admin/project/edit/${project.id}`}>
+                    <Button variant="outline" size="sm">
+                      Edit
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => onDelete(project.id, project.title)}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+            </div>
+          );
+        },
+      });
+    }
+
+    return baseColumns;
+  }, [showActions, showViewAction, onDelete]);
 
   const table = useReactTable({
     data,
@@ -70,6 +245,11 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: "includesString",
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
     state: {
       sorting,
       columnFilters,
@@ -79,7 +259,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full">
+    <>
       <div className="flex flex-col gap-4 py-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex gap-4 items-center">
@@ -87,7 +267,7 @@ export function DataTable<TData, TValue>({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search all columns..."
-                value={globalFilter ?? ""}
+                value={globalFilter}
                 onChange={(event) => setGlobalFilter(event.target.value)}
                 className="pl-10"
               />
@@ -115,12 +295,14 @@ export function DataTable<TData, TValue>({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <Link href="/admin/project/create">
-            <Button>
-              <LuPlus className="mr-2 h-4 w-4" />
-              Add Project
-            </Button>
-          </Link>
+          {showAddButton && (
+            <Link href={addButtonHref}>
+              <Button>
+                <LuPlus className="mr-2 h-4 w-4" />
+                {addButtonText}
+              </Button>
+            </Link>
+          )}
         </div>
 
         {globalFilter && (
@@ -169,7 +351,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="align-top">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -231,6 +413,9 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+ProjectDataTable.displayName = "ProjectDataTable";
+export { ProjectDataTable };

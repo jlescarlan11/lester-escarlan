@@ -82,7 +82,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
-            autoCropToAspectRatio(img, 2, 1);
+            autoCropToAspectRatio(img, 1, 1);
           };
           img.src = e.target?.result as string;
         };
@@ -105,7 +105,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             drop
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            PNG, JPG, GIF up to 10MB (auto-cropped to 2:1 ratio)
+            PNG, JPG, GIF up to 10MB (auto-cropped to 1:1 ratio)
           </p>
         </div>
         <Input

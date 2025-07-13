@@ -1,4 +1,4 @@
-import Breadcrumbs from "../_components/common/Breadcrumbs";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,23 +6,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { FolderOpen } from "lucide-react";
+import Link from "next/link";
+import SectionTitle from "../_components/common/SectionTitle";
 import SignOutButton from "./_components/SignOutButton";
 
 const AdminPage = () => {
   return (
     <>
-      <div>
-        <Breadcrumbs />
-        <div>
-          <h1>Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage your portfolio</p>
-        </div>
-      </div>
+      <SectionTitle
+        section="Admin Dashboard"
+        description="Manage your portfolio and projects"
+      />
 
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="max-w-md hover:shadow-md transition-shadow cursor-pointer">
           <Link href="/admin/project">
             <CardHeader>

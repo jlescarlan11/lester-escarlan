@@ -44,6 +44,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
 # Next.js
 NEXTAUTH_SECRET="your-nextauth-secret"
 NEXTAUTH_URL="http://localhost:3000"
+
+# Email (Resend)
+RESEND_API_KEY="your-resend-api-key"
 ```
 
 ## Supabase Setup
@@ -65,8 +68,41 @@ npx prisma migrate dev
 npx prisma generate
 ```
 
+## Contact Form Setup
+
+The contact form uses [Resend](https://resend.com) for email delivery. To set it up:
+
+1. Create a free account at [resend.com](https://resend.com)
+2. Get your API key from the dashboard
+3. Add the API key to your environment variables as `RESEND_API_KEY`
+4. The contact form will send emails to `jlescarlan11@gmail.com` (you can change this in `app/api/contact/route.ts`)
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Resume Builder
+
+This project includes a script to generate a PDF resume from the data in `app/_data/`.
+
+### Requirements
+- Node.js
+- `pdflatex` installed and available in your system PATH (for LaTeX PDF generation)
+
+### Usage
+
+To generate the resume PDF in `public/resume.pdf`, run:
+
+```
+npm run build:resume
+```
+
+This is also included in the main build step:
+
+```
+npm run build
+```
+
+The script will read your data files and output a LaTeX-styled PDF resume to `public/`.

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import axios from "axios"
+import { toast } from "@/lib/toast"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,13 +38,16 @@ export function DeleteProjectModal({
       const response = await axios.delete(`/api/project/${projectId}`)
       
       if (response.data.success) {
+        toast.success("Project deleted successfully!")
         onDeleteSuccess()
         onClose()
       } else {
         console.error("Failed to delete project:", response.data.error)
+        toast.error("Failed to delete project. Please try again.")
       }
     } catch (error) {
       console.error("Error deleting project:", error)
+      toast.error("Failed to delete project. Please try again.")
     } finally {
       setIsDeleting(false)
     }

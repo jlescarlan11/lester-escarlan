@@ -6,7 +6,7 @@ import HeadingHiglight from "../_components/common/HeadingHiglight";
 
 const HeaderSection = () => {
   return (
-    <header className="min-h-dvh flex items-center">
+    <header id="header" className="min-h-dvh flex items-center">
       <div className="space-y-4 ">
         <div>
           <HeadingHiglight>HI, MY NAME IS</HeadingHiglight>
@@ -16,7 +16,14 @@ const HeaderSection = () => {
         <div className="flex gap-2">
           {header.buttons.map((button) => (
             <Button key={button.label} asChild>
-              <Link href={button.link}>{button.label}</Link>
+              <Link
+                href={button.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                {button.label}
+              </Link>
             </Button>
           ))}
         </div>

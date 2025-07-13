@@ -1,7 +1,7 @@
 "use client";
 
+import SectionTitle from "@/app/_components/common/SectionTitle";
 import { useRouter } from "next/navigation";
-import Breadcrumbs from "@/app/_components/common/Breadcrumbs";
 import { ProjectForm } from "../_components/ProjectForm";
 
 const CreateProjectPage = () => {
@@ -12,20 +12,15 @@ const CreateProjectPage = () => {
   };
 
   const handleSuccess = () => {
-    // The form will handle the redirect
+    // The form will handle the redirect and show success toast
   };
 
   return (
     <>
-      <div>
-        <Breadcrumbs />
-        <header>
-          <h1>Create Project</h1>
-          <p className="text-muted-foreground">
-            Add a new project to your portfolio
-          </p>
-        </header>
-      </div>
+      <SectionTitle
+        section="Create Project"
+        description="Add a new project to your portfolio"
+      />
       <ProjectForm
         mode="create"
         onCancel={handleCancel}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { toast } from "@/lib/toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -28,7 +29,7 @@ import Image from "next/image"
 import { LuX } from "react-icons/lu"
 import ImageCropper from "@/components/ui/ImageCropper"
 import { projectFormSchema, type ProjectFormValues } from "@/lib/schemas"
-import { Project } from "../columns"
+import { Project } from "@/app/_components/common/ProjectDataTable"
 
 interface ProjectFormProps {
   mode: "create" | "edit"
@@ -128,6 +129,11 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
       })
 
       if (response.data.success) {
+        toast.success(
+          mode === "create" 
+            ? "Project created successfully!" 
+            : "Project updated successfully!"
+        )
         onSuccess()
         router.push("/admin/project")
       }
@@ -135,6 +141,11 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
       console.error(`Error ${mode === "create" ? "creating" : "updating"} project:`, error)
       const errorMessage = error instanceof Error ? error.message : `Failed to ${mode} project. Please try again.`
       setError(errorMessage)
+      toast.error(
+        mode === "create" 
+          ? "Failed to create project. Please try again." 
+          : "Failed to update project. Please try again."
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -169,13 +180,13 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
       {/* Image Upload and Crop UI */}
       <div>
         {croppedImage ? (
-          <div className="flex flex-col h-72 rounded-md border border-dashed border-muted-foreground bg-muted items-center justify-center cursor-pointer relative group">
+          <div className="flex flex-col w-full aspect-square rounded-md border border-dashed border-muted-foreground bg-muted items-center justify-center cursor-pointer relative group">
             <Image
               src={croppedImage}
               alt="Cropped"
               width={0}
               height={0}
-              className="rounded-md border w-auto h-72 object-cover"
+              className="rounded-md border w-full h-full object-cover"
               unoptimized
             />
             <Button

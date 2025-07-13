@@ -1,7 +1,7 @@
 "use client";
 
+import SectionTitle from "@/app/_components/common/SectionTitle";
 import { useParams, useRouter } from "next/navigation";
-import Breadcrumbs from "@/app/_components/common/Breadcrumbs";
 import { ProjectForm } from "../../_components/ProjectForm";
 
 const EditProjectPage = () => {
@@ -14,20 +14,15 @@ const EditProjectPage = () => {
   };
 
   const handleSuccess = () => {
-    // The form will handle the redirect
+    // The form will handle the redirect and show success toast
   };
 
   return (
     <>
-      <div>
-        <Breadcrumbs />
-        <div>
-          <h1>Edit Project</h1>
-          <p className="text-muted-foreground">
-            Update your project information
-          </p>
-        </div>
-      </div>
+      <SectionTitle
+        section="Edit Project"
+        description="Update your project information"
+      />
 
       <ProjectForm
         mode="edit"
