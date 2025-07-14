@@ -48,6 +48,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.svg",
   },
+  metadataBase: new URL("https://lester-escarlan.vercel.app"),
 };
 
 export default function RootLayout({

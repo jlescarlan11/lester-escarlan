@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Handle image upload
     let imageUrl = "";
-    if (image?.size > 0) {
+    if (image && typeof image === "object" && "size" in image && image.size > 0) {
       const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
       const maxSize = 5 * 1024 * 1024; // 5MB
 
