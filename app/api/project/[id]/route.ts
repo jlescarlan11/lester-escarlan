@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { prisma } from "@/prisma/client";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -23,30 +24,95 @@ const projectUpdateSchema = z.object({
   status: z.enum(["featured", "archived"]).default("featured"),
 });
 
+const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const REVALIDATE_PATHS = [
+  "/",
+  "/admin/project",
+  "/archive",
+  "/projects",
+  "/api/project",
+];
+
 let supabase: SupabaseClient | null = null;
 if (supabaseKey) {
   try {
     supabase = createClient(supabaseUrl, supabaseKey);
   } catch {
-    // console.error("Failed to initialize Supabase client");
+    // Supabase client initialization failed
   }
 }
 
-function getProjectIdFromUrl(url: string) {
+function getProjectIdFromUrl(url: string): string | null {
   const match = url.match(/\/api\/project\/(.+)$/);
-  return match ? match[1] : null;
+  return match?.[1] || null;
+}
+
+function revalidateAllPaths(): void {
+  REVALIDATE_PATHS.forEach((path) => revalidatePath(path));
+}
+
+function extractFileNameFromUrl(url: string): string | null {
+  const urlParts = url.split("/");
+  const bucketIndex = urlParts.findIndex((part) => part === "project-preview");
+  return bucketIndex !== -1
+    ? urlParts.slice(bucketIndex + 1).join("/")
+    : urlParts[urlParts.length - 1];
+}
+
+async function deleteImageFromStorage(imageUrl: string): Promise<void> {
+  if (!supabase || !imageUrl) return;
+
+  try {
+    const fileName = extractFileNameFromUrl(imageUrl);
+    if (fileName) {
+      await supabase.storage.from("project-preview").remove([fileName]);
+    }
+  } catch (error) {
+    console.error("Error deleting image from storage:", error);
+  }
+}
+
+async function uploadImageToStorage(file: File): Promise<string> {
+  if (!supabase) {
+    throw new Error("File upload service not configured");
+  }
+
+  // Validate file type
+  if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+    throw new Error("Invalid file type. Only JPEG, PNG, and WebP are allowed");
+  }
+
+  // Validate file size
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error("File too large. Maximum size is 5MB");
+  }
+
+  const fileExt = file.name.split(".").pop();
+  const fileName = `${Date.now()}.${fileExt}`;
+
+  await supabase.storage.from("project-preview").upload(fileName, file);
+  return `${supabaseUrl}/storage/v1/object/public/project-preview/${fileName}`;
+}
+
+async function findProjectById(id: string) {
+  const project = await prisma.project.findUnique({ where: { id } });
+  if (!project) {
+    throw new Error("Project not found");
+  }
+  return project;
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const url = request.url;
-    const id = getProjectIdFromUrl(url);
+    const id = getProjectIdFromUrl(request.url);
     if (!id) {
       return NextResponse.json(
         { success: false, error: "Project ID is required" },
         { status: 400 }
       );
     }
+
     const formData = await request.formData();
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
@@ -63,6 +129,7 @@ export async function PUT(request: NextRequest) {
       technologies,
       status,
     });
+
     if (!validationResult.success) {
       return NextResponse.json(
         {
@@ -74,70 +141,25 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Check if project exists
-    const existingProject = await prisma.project.findUnique({ where: { id } });
-    if (!existingProject) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    }
-
+    const existingProject = await findProjectById(id);
     let imageUrl = existingProject.preview;
 
-    // Upload new image if provided
+    // Handle image upload if provided
     if (preview && preview.size > 0) {
-      if (!supabase) {
-        return NextResponse.json(
-          { error: "File upload service not configured" },
-          { status: 500 }
-        );
-      }
-      // Delete old image if it exists
-      if (imageUrl) {
-        try {
-          // Extract filename from the URL
-          const urlParts = imageUrl.split("/");
-          const bucketIndex = urlParts.findIndex(
-            (part) => part === "project-preview"
-          );
-          const oldFileName =
-            bucketIndex !== -1
-              ? urlParts.slice(bucketIndex + 1).join("/")
-              : urlParts[urlParts.length - 1];
-          if (oldFileName) {
-            await supabase.storage
-              .from("project-preview")
-              .remove([oldFileName]);
-          }
-        } catch {
-          // console.error("Error deleting old image from storage:", storageError);
-        }
-      }
-      // Validate file type
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-      if (!allowedTypes.includes(preview.type)) {
-        return NextResponse.json(
-          { error: "Invalid file type. Only JPEG, PNG, and WebP are allowed" },
-          { status: 400 }
-        );
-      }
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024;
-      if (preview.size > maxSize) {
-        return NextResponse.json(
-          { error: "File too large. Maximum size is 5MB" },
-          { status: 400 }
-        );
-      }
       try {
-        const fileExt = preview.name.split(".").pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        await supabase.storage
-          .from("project-preview")
-          .upload(fileName, preview);
-        imageUrl = `${supabaseUrl}/storage/v1/object/public/project-preview/${fileName}`;
-      } catch {
-        // console.error("Exception during upload:", uploadException);
+        // Delete old image first
+        if (imageUrl) {
+          await deleteImageFromStorage(imageUrl);
+        }
+
+        // Upload new image
+        imageUrl = await uploadImageToStorage(preview);
+      } catch (error) {
         return NextResponse.json(
-          { error: "Failed to upload image" },
+          {
+            error:
+              error instanceof Error ? error.message : "Failed to upload image",
+          },
           { status: 500 }
         );
       }
@@ -162,6 +184,8 @@ export async function PUT(request: NextRequest) {
       },
     });
 
+    revalidateAllPaths();
+
     return NextResponse.json({
       success: true,
       data: updatedProject,
@@ -169,59 +193,41 @@ export async function PUT(request: NextRequest) {
     });
   } catch (error) {
     console.error("Project update error:", error);
+    const message =
+      error instanceof Error ? error.message : "Failed to update project";
+    const status = message === "Project not found" ? 404 : 500;
+
     return NextResponse.json(
       {
-        error: "Failed to update project",
+        error: message,
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status }
     );
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const url = request.url;
-    const id = getProjectIdFromUrl(url);
+    const id = getProjectIdFromUrl(request.url);
     if (!id) {
       return NextResponse.json(
         { success: false, error: "Project ID is required" },
         { status: 400 }
       );
     }
-    // Check if project exists
-    const existingProject = await prisma.project.findUnique({ where: { id } });
-    if (!existingProject) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+
+    const existingProject = await findProjectById(id);
+
+    // Delete image from storage if it exists
+    if (existingProject.preview) {
+      await deleteImageFromStorage(existingProject.preview);
     }
-    // Delete image from Supabase storage if it exists
-    if (existingProject.preview && supabase) {
-      try {
-        // Extract filename from the URL
-        const urlParts = existingProject.preview.split("/");
-        // Find the index of 'project-preview' in the URL
-        const bucketIndex = urlParts.findIndex(
-          (part) => part === "project-preview"
-        );
-        // The filename is everything after the bucket name
-        const fileName =
-          bucketIndex !== -1
-            ? urlParts.slice(bucketIndex + 1).join("/")
-            : urlParts[urlParts.length - 1];
-        if (fileName) {
-          const { error: deleteError } = await supabase.storage
-            .from("project-preview")
-            .remove([fileName]);
-          if (deleteError) {
-            console.error("Failed to delete image from storage:", deleteError);
-          }
-        }
-      } catch (storageError) {
-        console.error("Error deleting image from storage:", storageError);
-      }
-    }
-    // Delete project
+
+    // Delete project from database
     const deletedProject = await prisma.project.delete({ where: { id } });
+
+    revalidateAllPaths();
 
     return NextResponse.json({
       success: true,
@@ -230,37 +236,38 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error("Project delete error:", error);
+    const message =
+      error instanceof Error ? error.message : "Failed to delete project";
+    const status = message === "Project not found" ? 404 : 500;
+
     return NextResponse.json(
       {
-        error: "Failed to delete project",
+        error: message,
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status }
     );
   }
 }
 
 export async function GET(request: NextRequest) {
-  const url = request.url;
-  const id = getProjectIdFromUrl(url);
-  if (!id) {
-    return NextResponse.json(
-      { error: "Project ID is required" },
-      { status: 400 }
-    );
-  }
   try {
-    const project = await prisma.project.findUnique({ where: { id } });
-    if (!project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    const id = getProjectIdFromUrl(request.url);
+    if (!id) {
+      return NextResponse.json(
+        { error: "Project ID is required" },
+        { status: 400 }
+      );
     }
-    const response = { success: true, data: project };
-    return NextResponse.json(response);
+
+    const project = await findProjectById(id);
+    return NextResponse.json({ success: true, data: project });
   } catch (error) {
     console.error("Project fetch error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch project" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch project";
+    const status = message === "Project not found" ? 404 : 500;
+
+    return NextResponse.json({ success: false, error: message }, { status });
   }
-} 
+}

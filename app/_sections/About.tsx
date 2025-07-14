@@ -16,10 +16,10 @@ const AboutSection = () => {
             width={about.image.width}
             height={about.image.height}
             alt={about.image.alt}
-            className="rounded-lg max-w-full max-h-fit"
+            className="rounded-lg"
           />
         </div>
-        <div className="col-span-2 text-lg">
+        <div className="col-span-2 text-lg space-y-4">
           {about.aboutMe.map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
