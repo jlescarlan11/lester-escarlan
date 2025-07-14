@@ -4,7 +4,7 @@ import SharedCard from "../_components/common/SharedCard";
 
 const EducationSection = () => {
   return (
-    <section id="education" className="section">
+    <section className="section">
       <SectionTitle
         section={education.section}
         description={education.sectionDescription}

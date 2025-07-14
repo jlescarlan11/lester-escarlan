@@ -19,22 +19,22 @@ export default function Home() {
     <>
       <HeaderSection />
       <Navbar />
-      <LazySection effect="fade">
+      <LazySection effect="fade" id="about">
         <AboutSection />
       </LazySection>
-      <LazySection effect="slide">
+      <LazySection effect="slide" id="education">
         <EducationSection />
       </LazySection>
-      <LazySection effect="fade">
+      <LazySection effect="fade" id="experience">
         <ExperienceSection />
       </LazySection>
-      <LazySection effect="slide">
+      <LazySection effect="slide" id="project">
         <ProjectSection />
       </LazySection>
-      <LazySection effect="fade">
+      <LazySection effect="fade" id="techstack">
         <TechStackSection />
       </LazySection>
-      <LazySection effect="slide">
+      <LazySection effect="slide" id="contact">
         <ContactSection />
       </LazySection>
     </>

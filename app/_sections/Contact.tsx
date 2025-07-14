@@ -87,7 +87,7 @@ const ContactSection = () => {
   ];
 
   return (
-    <section id="contact" className="section">
+    <section className="section">
       <SectionTitle
         section={contact.section}
         description={contact.sectionDescription}

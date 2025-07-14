@@ -46,7 +46,7 @@ const ProjectSection = () => {
 
   if (loading) {
     return (
-      <section id="project" className="section">
+      <section className="section">
         <SectionTitle section={section} description={sectionDescription} />
         <div className="flex flex-col items-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
@@ -58,7 +58,7 @@ const ProjectSection = () => {
 
   if (error) {
     return (
-      <section id="project" className="section">
+      <section className="section">
         <SectionTitle section={section} description={sectionDescription} />
         <div className="flex flex-col items-center py-8">
           <p className="text-destructive mb-2">{error}</p>
@@ -71,7 +71,7 @@ const ProjectSection = () => {
   }
 
   return (
-    <section id="project" className="section">
+    <section className="section">
       <SectionTitle section={section} description={sectionDescription} />
 
       {projects.length === 0 ? (

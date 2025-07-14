@@ -198,7 +198,7 @@ const TechStackSection = () => {
   }
 
   return (
-    <section id="techstack" className="section">
+    <section className="section">
       <SectionTitle section="Technologies" description="What I use and know" />
       <p className="mb-4">{techStack.intro}</p>
       <div className="space-y-8">

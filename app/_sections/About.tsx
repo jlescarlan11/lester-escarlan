@@ -4,7 +4,7 @@ import about from "../_data/about";
 
 const AboutSection = () => {
   return (
-    <section id="about" className="section">
+    <section className="section">
       <SectionTitle
         section={about.section}
         description={about.sectionDescription}

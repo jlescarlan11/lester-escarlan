@@ -6,6 +6,7 @@ type LazySectionProps = {
   className?: string;
   effect?: "fade" | "slide";
   threshold?: number;
+  id?: string;
 };
 
 const LazySection: React.FC<LazySectionProps> = ({
@@ -13,6 +14,7 @@ const LazySection: React.FC<LazySectionProps> = ({
   className = "",
   effect = "fade",
   threshold = 0.15,
+  id,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -70,6 +72,7 @@ const LazySection: React.FC<LazySectionProps> = ({
   return (
     <div
       ref={ref}
+      id={id}
       className={`${className} ${getEffectClass()}`.trim()}
       style={{ willChange: "opacity, transform" }}
     >
