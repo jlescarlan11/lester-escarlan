@@ -7,7 +7,6 @@ import HeaderSection from "./_sections/Header";
 import ProjectSection from "./_sections/Project";
 import TechStackSection from "./_sections/TechStack";
 import Navbar from "./_components/common/Navbar";
-import LazySection from "./_components/common/LazySection";
 
 const SITE_URL = "https://lester-escarlan.vercel.app";
 const SITE_TITLE = "Lester Escarlan | Portfolio";
@@ -19,24 +18,24 @@ export default function Home() {
     <>
       <HeaderSection />
       <Navbar />
-      <LazySection effect="fade" id="about">
+      <section id="about">
         <AboutSection />
-      </LazySection>
-      <LazySection effect="slide" id="education">
+      </section>
+      <section id="education">
         <EducationSection />
-      </LazySection>
-      <LazySection effect="fade" id="experience">
+      </section>
+      <section id="experience">
         <ExperienceSection />
-      </LazySection>
-      <LazySection effect="slide" id="project">
+      </section>
+      <section id="project">
         <ProjectSection />
-      </LazySection>
-      <LazySection effect="fade" id="techstack">
+      </section>
+      <section id="techstack">
         <TechStackSection />
-      </LazySection>
-      <LazySection effect="slide" id="contact">
+      </section>
+      <section id="contact">
         <ContactSection />
-      </LazySection>
+      </section>
     </>
   );
 }

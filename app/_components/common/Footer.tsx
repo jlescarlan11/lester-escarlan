@@ -1,30 +1,14 @@
 "use client";
-import React from "react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { LuArrowUp } from "react-icons/lu";
 import contact from "@/app/_data/contact";
 import Link from "next/link";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   const year = new Date().getFullYear();
   const { github, linkedin } = contact.contactInfo;
 
-  const handleScrollTop = () => {
-    if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
   return (
-    <footer className="relative w-full bg-background/80 backdrop-blur py-8 mt-12">
-      {/* Arrow Up Button - floating at the top center border */}
-      <button
-        onClick={handleScrollTop}
-        aria-label="Back to top"
-        className="absolute left-1/2 -top-5 -translate-x-1/2 rounded-full p-2 bg-muted hover:bg-primary hover:text-primary-foreground transition-colors shadow z-10"
-      >
-        <LuArrowUp className="w-5 h-5" />
-      </button>
+    <footer className="w-full bg-background/80 backdrop-blur py-8 mt-12">
       <div className=" flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
         {/* Left: Copyright */}
         <div className="text-muted-foreground text-center md:text-left">
