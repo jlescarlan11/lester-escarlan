@@ -1,5 +1,8 @@
 "use client";
-import { Metadata } from "next";
+import { useEffect, useState } from "react";
+import LazySection from "./_components/common/LazySection";
+import Navbar from "./_components/common/Navbar";
+import NavbarSpacer from "./_components/common/NavbarSpacer";
 import AboutSection from "./_sections/About";
 import ContactSection from "./_sections/Contact";
 import EducationSection from "./_sections/Education";
@@ -7,10 +10,6 @@ import ExperienceSection from "./_sections/Experience";
 import HeaderSection from "./_sections/Header";
 import ProjectSection from "./_sections/Project";
 import TechStackSection from "./_sections/TechStack";
-import Navbar from "./_components/common/Navbar";
-import LazySection from "./_components/common/LazySection";
-import NavbarSpacer from "./_components/common/NavbarSpacer";
-import { useState, useEffect } from "react";
 
 export default function Home() {
   const [showSpacer, setShowSpacer] = useState(false);
