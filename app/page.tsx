@@ -1,3 +1,4 @@
+"use client";
 import { Metadata } from "next";
 import AboutSection from "./_sections/About";
 import ContactSection from "./_sections/Contact";
@@ -7,71 +8,50 @@ import HeaderSection from "./_sections/Header";
 import ProjectSection from "./_sections/Project";
 import TechStackSection from "./_sections/TechStack";
 import Navbar from "./_components/common/Navbar";
-
-const SITE_URL = "https://lester-escarlan.vercel.app";
-const SITE_TITLE = "Lester Escarlan | Portfolio";
-const SITE_DESCRIPTION =
-  "Lester Escarlan's personal portfolio showcasing skills, projects, and experience.";
+import LazySection from "./_components/common/LazySection";
+import NavbarSpacer from "./_components/common/NavbarSpacer";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [showSpacer, setShowSpacer] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const aboutSection = document.getElementById("about");
+      const scrollY = window.scrollY;
+      if (aboutSection) {
+        const aboutOffset = aboutSection.offsetTop - 150; // match Navbar logic
+        setShowSpacer(scrollY >= aboutOffset);
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <HeaderSection />
       <Navbar />
-      <section id="about">
+      <NavbarSpacer visible={showSpacer} />
+      <LazySection effect="fade" id="about">
         <AboutSection />
-      </section>
-      <section id="education">
+      </LazySection>
+      <LazySection effect="slide" id="education">
         <EducationSection />
-      </section>
-      <section id="experience">
+      </LazySection>
+      <LazySection effect="fade" id="experience">
         <ExperienceSection />
-      </section>
-      <section id="project">
+      </LazySection>
+      <LazySection effect="slide" id="project">
         <ProjectSection />
-      </section>
-      <section id="techstack">
+      </LazySection>
+      <LazySection effect="fade" id="techstack">
         <TechStackSection />
-      </section>
-      <section id="contact">
+      </LazySection>
+      <LazySection effect="slide" id="contact">
         <ContactSection />
-      </section>
+      </LazySection>
     </>
   );
 }
-
-export const metadata: Metadata = {
-  title: SITE_TITLE,
-  description: SITE_DESCRIPTION,
-  keywords: [
-    "Lester Escarlan",
-    "Portfolio",
-    "Web Developer",
-    "Projects",
-    "Experience",
-    "Skills",
-  ],
-  authors: [{ name: "Lester Escarlan", url: SITE_URL }],
-  openGraph: {
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    url: SITE_URL,
-    siteName: "Lester Escarlan Portfolio",
-    images: [
-      {
-        url: `${SITE_URL}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: "Lester Escarlan Portfolio",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  icons: {
-    icon: "/icon.svg",
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
-};

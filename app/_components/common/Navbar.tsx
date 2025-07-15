@@ -12,6 +12,9 @@ const SECTIONS = [
   { id: "contact", label: "Contact" },
 ];
 
+const NAVBAR_HEIGHT = 48; // px
+const NAVBAR_TOP_OFFSET = 24; // px
+
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
@@ -118,7 +121,7 @@ const Navbar = () => {
     e.preventDefault();
     const section = document.getElementById(id);
     if (section) {
-      const yOffset = -80; // Adjust this offset for your navbar height
+      const yOffset = -(NAVBAR_HEIGHT + NAVBAR_TOP_OFFSET); // -72
       const y =
         section.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
