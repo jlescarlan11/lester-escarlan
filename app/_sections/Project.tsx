@@ -28,8 +28,6 @@ const ProjectSection = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      setLoading(true);
-      setError(null);
       try {
         const data = await getProjectData();
         setProjects(data.projectData || []);
@@ -44,31 +42,30 @@ const ProjectSection = () => {
     fetchProjects();
   }, []);
 
-  if (loading) {
-    return (
-      <section className="section">
-        <SectionTitle section={section} description={sectionDescription} />
-        <div className="flex flex-col items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
-          <p className="text-muted-foreground">Loading projects...</p>
-        </div>
-      </section>
-    );
-  }
+  const LoadingState = () => (
+    <section className="section">
+      <SectionTitle section={section} description={sectionDescription} />
+      <div className="flex flex-col items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2" />
+        <p className="text-muted-foreground">Loading projects...</p>
+      </div>
+    </section>
+  );
 
-  if (error) {
-    return (
-      <section className="section">
-        <SectionTitle section={section} description={sectionDescription} />
-        <div className="flex flex-col items-center py-8">
-          <p className="text-destructive mb-2">{error}</p>
-          <Button variant="outline" onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
-        </div>
-      </section>
-    );
-  }
+  const ErrorState = () => (
+    <section className="section">
+      <SectionTitle section={section} description={sectionDescription} />
+      <div className="flex flex-col items-center py-8">
+        <p className="text-destructive mb-2">{error}</p>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Try Again
+        </Button>
+      </div>
+    </section>
+  );
+
+  if (loading) return <LoadingState />;
+  if (error) return <ErrorState />;
 
   return (
     <section className="section">
@@ -81,29 +78,27 @@ const ProjectSection = () => {
       ) : (
         <div className="space-y-6">
           {projects.map((project) => (
-            <div key={project.id} className="relative group">
-              <SharedCard
-                logo={project.preview || "/alliance-logo.svg"}
-                mainTitle={project.title}
-                subTitle={project.status}
-                period={new Date(project.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                details={[project.description]}
-                technologies={project.technologies}
-                link={project.link}
-              />
-            </div>
+            <SharedCard
+              key={project.id}
+              logo={project.preview || "/alliance-logo.svg"}
+              mainTitle={project.title}
+              subTitle={project.status}
+              period={project.createdAt}
+              details={[project.description]}
+              technologies={project.technologies}
+              link={project.link}
+            />
           ))}
 
-          {/* Archive Link */}
           <div className="text-start mt-12">
             <Link
-              href="/archive"
+              href="/project"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary relative inline-block group text-sm"
             >
               <div className="flex items-center gap-2">
-                View more in archive{" "}
+                View more projects{" "}
                 <LuArrowRight className="text-primary mt-0.5 flex-shrink-0" />
               </div>
               <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />

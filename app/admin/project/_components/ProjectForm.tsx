@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import axios from "axios"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from "@/lib/toast"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/lib/toast";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,38 +15,43 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import Image from "next/image"
-import { LuX } from "react-icons/lu"
-import ImageCropper from "@/components/ui/ImageCropper"
-import { projectFormSchema, type ProjectFormValues } from "@/lib/schemas"
-import { Project } from "@/app/_components/common/ProjectDataTable"
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+import { LuX } from "react-icons/lu";
+import ImageCropper from "@/components/ui/ImageCropper";
+import { projectFormSchema, type ProjectFormValues } from "@/lib/schemas";
+import { Project } from "@/app/_components/common/ProjectCardList";
 
 interface ProjectFormProps {
-  mode: "create" | "edit"
-  projectId?: string
-  onCancel: () => void
-  onSuccess: () => void
+  mode: "create" | "edit";
+  projectId?: string;
+  onCancel: () => void;
+  onSuccess: () => void;
 }
 
-export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFormProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(mode === "edit")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [project, setProject] = useState<Project | null>(null)
-  const [croppedImage, setCroppedImage] = useState<string | null>(null)
+export function ProjectForm({
+  mode,
+  projectId,
+  onCancel,
+  onSuccess,
+}: ProjectFormProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(mode === "edit");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
-  const projectForm = useForm<ProjectFormValues>({
+  const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
       title: "",
@@ -56,98 +61,117 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
       technologies: "",
       status: "featured",
     },
-  })
+  });
+
+  const isEditMode = mode === "edit";
 
   // Fetch project data for edit mode
   useEffect(() => {
-    if (mode === "edit" && projectId) {
-      const fetchProject = async () => {
-        try {
-          setIsLoading(true)
-          const response = await axios.get(`/api/project/${projectId}`)
-          if (response.data.success) {
-            const projectData = response.data.data
-            setProject(projectData)
-            
-            // Pre-populate form with existing data
-            projectForm.reset({
-              title: projectData.title,
-              description: projectData.description,
-              link: projectData.link,
-              image: projectData.preview || "",
-              technologies: projectData.technologies.join(", "),
-              status: projectData.status,
-            })
-            
-            // Set cropped image if project has a preview
-            if (projectData.preview) {
-              setCroppedImage(projectData.preview)
-            }
-          } else {
-            setError("Failed to load project data")
-          }
-        } catch (err) {
-          console.error("Error fetching project:", err)
-          setError("Failed to load project data")
-        } finally {
-          setIsLoading(false)
-        }
-      }
+    if (!isEditMode || !projectId) return;
 
-      fetchProject()
-    }
-  }, [mode, projectId, projectForm])
+    const fetchProject = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(`/api/project/${projectId}`);
+
+        if (data.success) {
+          const projectData = data.data;
+          setProject(projectData);
+
+          form.reset({
+            title: projectData.title,
+            description: projectData.description,
+            link: projectData.link,
+            image: projectData.preview || "",
+            technologies: projectData.technologies.join(", "),
+            status: projectData.status,
+          });
+
+          if (projectData.preview) {
+            setCroppedImage(projectData.preview);
+          }
+        } else {
+          setError("Failed to load project data");
+        }
+      } catch (err) {
+        console.error("Error fetching project:", err);
+        setError("Failed to load project data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [isEditMode, projectId, form]);
+
+  const handleImageCrop = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    setCroppedImage(url);
+    form.setValue("image", url);
+  };
+
+  const handleImageRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCroppedImage(null);
+    form.setValue("image", "");
+  };
 
   async function onSubmit(values: ProjectFormValues) {
     try {
-      setIsSubmitting(true)
-      setError(null)
-      
-      const formData = new FormData()
-      formData.append("title", values.title)
-      formData.append("description", values.description)
-      formData.append("link", values.link || "")
-      formData.append("technologies", values.technologies)
-      formData.append("status", values.status || "featured")
-      
-      // If we have a cropped image, convert it to a File and append to formData
+      setIsSubmitting(true);
+      setError(null);
+
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("link", values.link || "");
+      formData.append("technologies", values.technologies);
+      formData.append("status", values.status || "featured");
+
+      // Handle image upload if there's a new cropped image
       if (croppedImage && croppedImage !== project?.preview) {
-        // Convert base64/blob URL to File
-        const response = await fetch(croppedImage)
-        const blob = await response.blob()
-        const file = new File([blob], "project-image.jpg", { type: "image/jpeg" })
-        formData.append(mode === "create" ? "image" : "preview", file)
+        const response = await fetch(croppedImage);
+        const blob = await response.blob();
+        const file = new File([blob], "project-image.jpg", {
+          type: "image/jpeg",
+        });
+        formData.append(isEditMode ? "preview" : "image", file);
       }
 
-      const url = mode === "create" ? "/api/project" : `/api/project/${projectId}`
-      const method = mode === "create" ? "post" : "put"
-      
+      const url = isEditMode ? `/api/project/${projectId}` : "/api/project";
+      const method = isEditMode ? "put" : "post";
+
       const response = await axios[method](url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.success) {
-        toast.success(
-          mode === "create" 
-            ? "Project created successfully!" 
-            : "Project updated successfully!"
-        )
-        onSuccess()
-        router.push("/admin/project")
+        const successMessage = isEditMode
+          ? "Project updated successfully!"
+          : "Project created successfully!";
+
+        toast.success(successMessage);
+        onSuccess();
+        router.push("/admin/project");
       }
     } catch (error: unknown) {
-      console.error(`Error ${mode === "create" ? "creating" : "updating"} project:`, error)
-      const errorMessage = error instanceof Error ? error.message : `Failed to ${mode} project. Please try again.`
-      setError(errorMessage)
+      console.error(
+        `Error ${isEditMode ? "updating" : "creating"} project:`,
+        error
+      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : `Failed to ${mode} project. Please try again.`;
+
+      setError(errorMessage);
       toast.error(
-        mode === "create" 
-          ? "Failed to create project. Please try again." 
-          : "Failed to update project. Please try again."
-      )
+        isEditMode
+          ? "Failed to update project. Please try again."
+          : "Failed to create project. Please try again."
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -155,11 +179,11 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2" />
           <p className="text-muted-foreground">Loading project...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -172,18 +196,18 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Image Upload and Crop UI */}
+      {/* Image Upload Section */}
       <div>
         {croppedImage ? (
           <div className="flex flex-col w-full aspect-square rounded-md border border-dashed border-muted-foreground bg-muted items-center justify-center cursor-pointer relative group">
             <Image
               src={croppedImage}
-              alt="Cropped"
+              alt="Project preview"
               width={0}
               height={0}
               className="rounded-md border w-full h-full object-cover"
@@ -191,35 +215,28 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
             />
             <Button
               variant="default"
-              onClick={(e) => {
-                e.stopPropagation()
-                setCroppedImage(null)
-              }}
+              onClick={handleImageRemove}
               className="absolute -top-3 -right-3 z-10 border border-muted-foreground rounded-full w-7 h-7 flex items-center justify-center shadow transition-colors"
             >
               <LuX />
             </Button>
           </div>
         ) : (
-          <ImageCropper
-            onCropComplete={(blob: Blob) => {
-              const url = URL.createObjectURL(blob)
-              setCroppedImage(url)
-              projectForm.setValue("image", url)
-            }}
-          />
+          <ImageCropper onCropComplete={handleImageCrop} />
         )}
       </div>
 
-      <Form {...projectForm}>
-        <form onSubmit={projectForm.handleSubmit(onSubmit)} className="space-y-6">
+      {/* Form Section */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {error && (
             <div className="p-4 text-sm text-red-500 bg-red-50 border border-red-200 rounded-md">
               {error}
             </div>
           )}
+
           <FormField
-            control={projectForm.control}
+            control={form.control}
             name="title"
             render={({ field }) => (
               <FormItem>
@@ -231,8 +248,9 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
               </FormItem>
             )}
           />
+
           <FormField
-            control={projectForm.control}
+            control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -244,8 +262,9 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
               </FormItem>
             )}
           />
+
           <FormField
-            control={projectForm.control}
+            control={form.control}
             name="link"
             render={({ field }) => (
               <FormItem>
@@ -261,17 +280,15 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
               </FormItem>
             )}
           />
+
           <FormField
-            control={projectForm.control}
+            control={form.control}
             name="technologies"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Technologies</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="React, TypeScript, Node.js"
-                    {...field}
-                  />
+                  <Input placeholder="React, TypeScript, Node.js" {...field} />
                 </FormControl>
                 <FormDescription>
                   Separate technologies with commas (e.g. Next.JS, Typescript,
@@ -281,8 +298,9 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
               </FormItem>
             )}
           />
+
           <FormField
-            control={projectForm.control}
+            control={form.control}
             name="status"
             render={({ field }) => (
               <FormItem>
@@ -302,28 +320,28 @@ export function ProjectForm({ mode, projectId, onCancel, onSuccess }: ProjectFor
               </FormItem>
             )}
           />
+
           <div className="flex gap-4 mt-8">
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               className="flex-1"
               onClick={onCancel}
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
-              className="flex-1"
-              disabled={isSubmitting}
-            >
-              {isSubmitting 
-                ? (mode === "create" ? "Creating..." : "Updating...") 
-                : (mode === "create" ? "Create Project" : "Update Project")
-              }
+            <Button type="submit" className="flex-1" disabled={isSubmitting}>
+              {isSubmitting
+                ? isEditMode
+                  ? "Updating..."
+                  : "Creating..."
+                : isEditMode
+                  ? "Update Project"
+                  : "Create Project"}
             </Button>
           </div>
         </form>
       </Form>
     </div>
-  )
-} 
+  );
+}

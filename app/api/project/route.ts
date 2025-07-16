@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
     const validationResult = projectSchema.safeParse(projectData);
     if (!validationResult.success) {
       return NextResponse.json(
-        {
-          error: "Validation failed",
-          details: validationResult.error.issues,
-        },
+        { error: "Validation failed", details: validationResult.error.issues },
         { status: 400 }
       );
     }
@@ -41,24 +38,20 @@ export async function POST(request: NextRequest) {
 
     // Handle image upload
     let imageUrl = "";
-    if (image && typeof image === "object" && "size" in image && image.size > 0) {
+    if (image?.size) {
       const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
       const maxSize = 5 * 1024 * 1024; // 5MB
 
       if (!allowedTypes.includes(image.type)) {
         return NextResponse.json(
-          {
-            error: "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
-          },
+          { error: "Invalid file type. Only JPEG, PNG, and WebP are allowed." },
           { status: 400 }
         );
       }
 
       if (image.size > maxSize) {
         return NextResponse.json(
-          {
-            error: "File too large. Maximum size is 5MB.",
-          },
+          { error: "File too large. Maximum size is 5MB." },
           { status: 400 }
         );
       }
@@ -72,10 +65,7 @@ export async function POST(request: NextRequest) {
 
       if (uploadError) {
         return NextResponse.json(
-          {
-            error: "Failed to upload image",
-            details: uploadError.message,
-          },
+          { error: "Failed to upload image", details: uploadError.message },
           { status: 500 }
         );
       }
@@ -99,14 +89,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Revalidate paths
-    const paths = [
-      "/",
-      "/admin/project",
-      "/archive",
-      "/projects",
-      "/api/project",
-    ];
-    paths.forEach((path) => revalidatePath(path));
+    ["/", "/admin/project", "/archive", "/project", "/api/project"].forEach(
+      (path) => revalidatePath(path)
+    );
 
     return NextResponse.json({
       success: true,
@@ -133,10 +118,7 @@ export async function GET() {
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch projects",
-      },
+      { success: false, error: "Failed to fetch projects" },
       { status: 500 }
     );
   }

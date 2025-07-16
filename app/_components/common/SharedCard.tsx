@@ -1,16 +1,17 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import { LuExternalLink } from "react-icons/lu";
+import DateDisplay from "./DateDisplay";
+import OverflowBadges from "./OverflowBadges";
 
 interface SharedCardProps {
   logo: string;
   mainTitle: string;
   subTitle: string;
-  period: string;
+  period: string | Date;
   details: string | string[];
   technologies?: string[];
   link?: string;
@@ -28,6 +29,11 @@ const SharedCard = ({
   className = "",
 }: SharedCardProps) => {
   const detailsText = Array.isArray(details) ? details.join(" ") : details;
+
+  const isValidDate = (date: string | Date): boolean => {
+    if (typeof date === "string") return !isNaN(Date.parse(date));
+    return date instanceof Date && !isNaN(date.getTime());
+  };
 
   return (
     <Card
@@ -53,18 +59,18 @@ const SharedCard = ({
         <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
           <span>{subTitle}</span>
           <span>•</span>
-          <span>{period}</span>
+          {isValidDate(period) ? (
+            <DateDisplay date={period} />
+          ) : (
+            <span>{period instanceof Date ? period.toString() : period}</span>
+          )}
         </div>
 
         <p className="text-sm mt-2 leading-relaxed opacity-90">{detailsText}</p>
 
         {technologies.length > 0 && (
-          <div className="flex gap-2 flex-wrap opacity-60 mt-3">
-            {technologies.map((tech, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
-                {tech.toLowerCase()}
-              </Badge>
-            ))}
+          <div className="opacity-60 mt-3">
+            <OverflowBadges technologies={technologies} />
           </div>
         )}
 

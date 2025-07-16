@@ -121,8 +121,7 @@
   }
 }
 
-main,
-footer {
+main {
   @apply max-w-4xl mx-auto px-4;
 }
 

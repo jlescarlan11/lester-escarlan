@@ -1,5 +1,5 @@
 "use client";
-import { ProjectDataTable } from "@/app/_components/common/ProjectDataTable";
+import { ProjectCardList } from "@/app/_components/common/ProjectCardList";
 import SectionTitle from "@/app/_components/common/SectionTitle";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -33,12 +33,10 @@ const AdminProjectPage = () => {
     try {
       setLoading(true);
       const response = await axios.get("/api/project");
+
       if (response.data.success) {
         setProjects(response.data.data);
-        // Only show success toast if this is not the initial load
-        if (projects.length > 0) {
-          toast.success("Projects refreshed successfully!");
-        }
+        setError(null);
       } else {
         setError("Failed to fetch projects");
         toast.error("Failed to fetch projects");
@@ -49,7 +47,7 @@ const AdminProjectPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [projects.length]);
+  }, []);
 
   useEffect(() => {
     fetchProjects();
@@ -63,6 +61,42 @@ const AdminProjectPage = () => {
     setDeleteModal({ isOpen: false, projectId: "", projectTitle: "" });
   };
 
+  if (loading) {
+    return (
+      <>
+        <SectionTitle
+          section="Project Management"
+          description="Manage your portfolio projects"
+        />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+            <p className="text-muted-foreground">Loading projects...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <SectionTitle
+          section="Project Management"
+          description="Manage your portfolio projects"
+        />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-destructive mb-2">{error}</p>
+            <Button variant="outline" onClick={fetchProjects}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <SectionTitle
@@ -70,35 +104,14 @@ const AdminProjectPage = () => {
         description="Manage your portfolio projects"
       />
       <div className="space-y-4">
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-muted-foreground">Loading projects...</p>
-            </div>
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <p className="text-destructive mb-2">{error}</p>
-              <Button
-                variant="outline"
-                onClick={() => window.location.reload()}
-              >
-                Try Again
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <ProjectDataTable
-            data={projects}
-            showActions={true}
-            onDelete={openDeleteModal}
-            showAddButton={true}
-            addButtonHref="/admin/project/create"
-            addButtonText="Add Project"
-          />
-        )}
+        <ProjectCardList
+          data={projects}
+          showActions={true}
+          onDelete={openDeleteModal}
+          showAddButton={true}
+          addButtonHref="/admin/project/create"
+          addButtonText="Add Project"
+        />
       </div>
       <DeleteProjectModal
         isOpen={deleteModal.isOpen}

@@ -1,16 +1,16 @@
 import React from "react";
-import ArchiveClient from "./ArchiveClient";
+import ProjectsClient from "./ProjectsClient";
 import { Metadata } from "next";
 
-const ArchivePage = (): React.ReactElement => {
-  return <ArchiveClient />;
+const ProjectsPage = () => {
+  return <ProjectsClient />;
 };
 
-export default ArchivePage;
+export default ProjectsPage;
 
 export const metadata: Metadata = {
-  title: "Lester Escarlan | Project Archive",
-  description: "Lester Escarlan's project archive",
+  title: "Lester Escarlan | Projects",
+  description: "Lester Escarlan's projects",
   keywords: [
     "Lester Escarlan",
     "Portfolio",
@@ -23,10 +23,9 @@ export const metadata: Metadata = {
     { name: "Lester Escarlan", url: "https://lester-escarlan.vercel.app" },
   ],
   openGraph: {
-    title: "Lester Escarlan | Portfolio",
-    description:
-      "Lester Escarlan's personal portfolio showcasing skills, projects, and experience.",
-    url: "https://lester-escarlan.vercel.app",
+    title: "Lester Escarlan | Projects",
+    description: "Lester Escarlan's projects and development work.",
+    url: "https://lester-escarlan.vercel.app/projects",
     siteName: "Lester Escarlan Portfolio",
     images: [
       {
@@ -43,6 +42,6 @@ export const metadata: Metadata = {
     icon: "/icon.svg",
   },
   alternates: {
-    canonical: "https://lester-escarlan.vercel.app",
+    canonical: "https://lester-escarlan.vercel.app/projects",
   },
 };

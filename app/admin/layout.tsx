@@ -1,7 +1,6 @@
-import React, { PropsWithChildren } from "react";
-import AuthCheck from "./AuthCheck";
 import { ThemeProvider } from "@/components/theme-provider";
-import Breadcrumbs from "@/app/_components/common/Breadcrumbs";
+import { PropsWithChildren } from "react";
+import AuthCheck from "./AuthCheck";
 
 const AdminLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -12,10 +11,7 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
       disableTransitionOnChange
     >
       <AuthCheck>
-        <div className="py-8">
-          <Breadcrumbs />
-          {children}
-        </div>
+        <div>{children}</div>
       </AuthCheck>
     </ThemeProvider>
   );

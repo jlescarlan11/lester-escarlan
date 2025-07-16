@@ -5,6 +5,7 @@ import AuthProvider from "./auth/Provider";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "./_components/common/Footer";
+import BreadcrumbsWrapper from "./_components/common/BreadcrumbsWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +70,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <main className="flex flex-col min-h-dvh">
+              <BreadcrumbsWrapper />
               <div className="mt-4 flex-1">{children}</div>
               <Footer />
             </main>

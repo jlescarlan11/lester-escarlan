@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { prisma } from "@/prisma/client";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -30,22 +30,14 @@ const REVALIDATE_PATHS = [
   "/",
   "/admin/project",
   "/archive",
-  "/projects",
+  "/project",
   "/api/project",
 ];
 
-let supabase: SupabaseClient | null = null;
-if (supabaseKey) {
-  try {
-    supabase = createClient(supabaseUrl, supabaseKey);
-  } catch {
-    // Supabase client initialization failed
-  }
-}
+const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 function getProjectIdFromUrl(url: string): string | null {
-  const match = url.match(/\/api\/project\/(.+)$/);
-  return match?.[1] || null;
+  return url.match(/\/api\/project\/(.+)$/)?.[1] || null;
 }
 
 function revalidateAllPaths(): void {
@@ -53,11 +45,11 @@ function revalidateAllPaths(): void {
 }
 
 function extractFileNameFromUrl(url: string): string | null {
-  const urlParts = url.split("/");
-  const bucketIndex = urlParts.findIndex((part) => part === "project-preview");
+  const parts = url.split("/");
+  const bucketIndex = parts.findIndex((part) => part === "project-preview");
   return bucketIndex !== -1
-    ? urlParts.slice(bucketIndex + 1).join("/")
-    : urlParts[urlParts.length - 1];
+    ? parts.slice(bucketIndex + 1).join("/")
+    : parts[parts.length - 1];
 }
 
 async function deleteImageFromStorage(imageUrl: string): Promise<void> {
@@ -74,19 +66,12 @@ async function deleteImageFromStorage(imageUrl: string): Promise<void> {
 }
 
 async function uploadImageToStorage(file: File): Promise<string> {
-  if (!supabase) {
-    throw new Error("File upload service not configured");
-  }
-
-  // Validate file type
+  if (!supabase) throw new Error("File upload service not configured");
   if (!ALLOWED_FILE_TYPES.includes(file.type)) {
     throw new Error("Invalid file type. Only JPEG, PNG, and WebP are allowed");
   }
-
-  // Validate file size
-  if (file.size > MAX_FILE_SIZE) {
+  if (file.size > MAX_FILE_SIZE)
     throw new Error("File too large. Maximum size is 5MB");
-  }
 
   const fileExt = file.name.split(".").pop();
   const fileName = `${Date.now()}.${fileExt}`;
@@ -97,10 +82,14 @@ async function uploadImageToStorage(file: File): Promise<string> {
 
 async function findProjectById(id: string) {
   const project = await prisma.project.findUnique({ where: { id } });
-  if (!project) {
-    throw new Error("Project not found");
-  }
+  if (!project) throw new Error("Project not found");
   return project;
+}
+
+function createErrorResponse(error: unknown, defaultMessage: string) {
+  const message = error instanceof Error ? error.message : defaultMessage;
+  const status = message === "Project not found" ? 404 : 500;
+  return NextResponse.json({ error: message }, { status });
 }
 
 export async function PUT(request: NextRequest) {
@@ -108,34 +97,26 @@ export async function PUT(request: NextRequest) {
     const id = getProjectIdFromUrl(request.url);
     if (!id) {
       return NextResponse.json(
-        { success: false, error: "Project ID is required" },
+        { error: "Project ID is required" },
         { status: 400 }
       );
     }
 
     const formData = await request.formData();
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const link = formData.get("link") as string;
-    const technologies = formData.get("technologies") as string;
-    const status = formData.get("status") as string;
-    const preview = formData.get("preview") as File | null;
+    const data = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      link: formData.get("link") as string,
+      technologies: formData.get("technologies") as string,
+      status: formData.get("status") as string,
+    };
 
-    // Validate input
-    const validationResult = projectUpdateSchema.safeParse({
-      title,
-      description,
-      link,
-      technologies,
-      status,
-    });
-
+    const validationResult = projectUpdateSchema.safeParse(data);
     if (!validationResult.success) {
       return NextResponse.json(
         {
           error: "Validation failed",
           details: validationResult.error.issues,
-          message: "Please check the form fields and try again",
         },
         { status: 400 }
       );
@@ -144,48 +125,26 @@ export async function PUT(request: NextRequest) {
     const existingProject = await findProjectById(id);
     let imageUrl = existingProject.preview;
 
-    // Handle image upload if provided
+    const preview = formData.get("preview") as File | null;
     if (preview && preview.size > 0) {
-      try {
-        // Delete old image first
-        if (imageUrl) {
-          await deleteImageFromStorage(imageUrl);
-        }
-
-        // Upload new image
-        imageUrl = await uploadImageToStorage(preview);
-      } catch (error) {
-        return NextResponse.json(
-          {
-            error:
-              error instanceof Error ? error.message : "Failed to upload image",
-          },
-          { status: 500 }
-        );
-      }
+      if (imageUrl) await deleteImageFromStorage(imageUrl);
+      imageUrl = await uploadImageToStorage(preview);
     }
 
-    // Parse technologies
-    const technologyArray = technologies
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-
-    // Update project
     const updatedProject = await prisma.project.update({
       where: { id },
       data: {
-        title,
-        description,
-        link,
-        technologies: technologyArray,
-        status: status as "featured" | "archived",
+        ...data,
+        technologies: data.technologies
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+        status: data.status as "featured" | "archived",
         preview: imageUrl,
       },
     });
 
     revalidateAllPaths();
-
     return NextResponse.json({
       success: true,
       data: updatedProject,
@@ -193,17 +152,7 @@ export async function PUT(request: NextRequest) {
     });
   } catch (error) {
     console.error("Project update error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to update project";
-    const status = message === "Project not found" ? 404 : 500;
-
-    return NextResponse.json(
-      {
-        error: message,
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status }
-    );
+    return createErrorResponse(error, "Failed to update project");
   }
 }
 
@@ -212,21 +161,16 @@ export async function DELETE(request: NextRequest) {
     const id = getProjectIdFromUrl(request.url);
     if (!id) {
       return NextResponse.json(
-        { success: false, error: "Project ID is required" },
+        { error: "Project ID is required" },
         { status: 400 }
       );
     }
 
     const existingProject = await findProjectById(id);
-
-    // Delete image from storage if it exists
-    if (existingProject.preview) {
+    if (existingProject.preview)
       await deleteImageFromStorage(existingProject.preview);
-    }
 
-    // Delete project from database
     const deletedProject = await prisma.project.delete({ where: { id } });
-
     revalidateAllPaths();
 
     return NextResponse.json({
@@ -236,17 +180,7 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error("Project delete error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to delete project";
-    const status = message === "Project not found" ? 404 : 500;
-
-    return NextResponse.json(
-      {
-        error: message,
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status }
-    );
+    return createErrorResponse(error, "Failed to delete project");
   }
 }
 
@@ -264,10 +198,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, data: project });
   } catch (error) {
     console.error("Project fetch error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to fetch project";
-    const status = message === "Project not found" ? 404 : 500;
-
-    return NextResponse.json({ success: false, error: message }, { status });
+    return createErrorResponse(error, "Failed to fetch project");
   }
 }
