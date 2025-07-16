@@ -61,8 +61,8 @@ const LazySection: React.FC<LazySectionProps> = ({
       return isVisible ? "opacity-100" : "opacity-0";
     }
 
-    const baseTransition = "transition-all duration-700 ease-out";
-    const slideTransform = effect === "slide" ? " translate-y-8" : "";
+    const baseTransition = "transition-all duration-300 ease-out";
+    const slideTransform = effect === "slide" ? " translate-y-2" : "";
     const visibleTransform =
       effect === "slide" && isVisible ? " translate-y-0" : "";
 
