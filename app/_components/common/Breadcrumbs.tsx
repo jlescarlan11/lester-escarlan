@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 const Breadcrumbs = () => {
   const pathname = usePathname();
@@ -30,7 +31,7 @@ const Breadcrumbs = () => {
             const isEditSegment = segment === "edit";
 
             return (
-              <>
+              <React.Fragment key={href}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   {isLast || isEditSegment ? (
@@ -39,7 +40,7 @@ const Breadcrumbs = () => {
                     <BreadcrumbLink href={href}>{label}</BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
-              </>
+              </React.Fragment>
             );
           })}
         </BreadcrumbList>

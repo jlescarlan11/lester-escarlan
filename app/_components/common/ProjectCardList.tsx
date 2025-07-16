@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { LuPlus } from "react-icons/lu";
+import { useRef } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,8 @@ const ProjectCardList = ({
   const [searchQuery, setSearchQuery] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(0);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   // Memoized filtered data
   const filteredProjects = React.useMemo(() => {
     if (!searchQuery.trim()) return data;
@@ -77,6 +80,11 @@ const ProjectCardList = ({
   const handlePageChange = (page: number) => {
     setCurrentPage(Math.max(0, Math.min(page, totalPages - 1)));
   };
+
+  // Helper for pagination input clearing
+  function clearInput(ref: React.RefObject<HTMLInputElement>) {
+    if (ref.current) ref.current.value = "";
+  }
 
   const renderProjectActions = (project: Project) => (
     <div className="flex items-center gap-2 md:justify-end mt-2 md:mt-0">
@@ -305,42 +313,200 @@ const ProjectCardList = ({
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center gap-2 mt-6">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(0)}
-          disabled={currentPage === 0}
-        >
-          First
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
-        >
-          Previous
-        </Button>
-        <span className="text-sm px-2">
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages - 1}
-        >
-          Next
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(totalPages - 1)}
-          disabled={currentPage === totalPages - 1}
-        >
-          Last
-        </Button>
+      <div className="flex justify-start items-center gap-2 mt-6">
+        {(() => {
+          const pageButtons = [];
+          const showInput = totalPages > 3;
+          const lastPage = totalPages - 1;
+          // Helper to render a page button
+          const renderPageBtn = (page: number, highlight = false) => (
+            <Button
+              key={page}
+              variant={highlight ? "default" : "outline"}
+              size="sm"
+              onClick={() => handlePageChange(page)}
+              className="w-12"
+            >
+              {page + 1}
+            </Button>
+          );
+
+          if (totalPages <= 1) {
+            // Only one page, show [1] [input]
+            pageButtons.push(renderPageBtn(0));
+            if (showInput) {
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+            }
+          } else if (totalPages === 2) {
+            // [1] [2] [input]
+            pageButtons.push(renderPageBtn(0));
+            pageButtons.push(renderPageBtn(1));
+            if (showInput) {
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+            }
+          } else if (totalPages === 3) {
+            // [1] [2] [3] [input]
+            for (let i = 0; i < 3; i++) pageButtons.push(renderPageBtn(i));
+            if (showInput) {
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+            }
+          } else {
+            // 4+ pages
+            if (currentPage <= 1) {
+              // [1 (highlighted)] [2] [3] [input] [last] (page 1)
+              // [1] [2 (highlighted)] [3] [input] [last] (page 2)
+              pageButtons.push(renderPageBtn(0, currentPage === 0));
+              pageButtons.push(renderPageBtn(1, currentPage === 1));
+              pageButtons.push(renderPageBtn(2, false));
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+              if (lastPage > 2) {
+                pageButtons.push(renderPageBtn(lastPage, false));
+              }
+            } else if (currentPage === lastPage) {
+              // [last-2] [last-1] [last (highlighted)] [input]
+              pageButtons.push(renderPageBtn(lastPage - 2, false));
+              pageButtons.push(renderPageBtn(lastPage - 1, false));
+              pageButtons.push(renderPageBtn(lastPage, true));
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+            } else {
+              // [current-1] [current (highlighted)] [current+1] [input] [last] (only if last is not in visible)
+              pageButtons.push(renderPageBtn(currentPage - 1, false));
+              pageButtons.push(renderPageBtn(currentPage, true));
+              pageButtons.push(renderPageBtn(currentPage + 1, false));
+              pageButtons.push(
+                <input
+                  key="input"
+                  ref={inputRef}
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  placeholder="Page"
+                  className="w-16 text-center border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const val = Number((e.target as HTMLInputElement).value);
+                      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        handlePageChange(val - 1);
+                        clearInput(
+                          inputRef as React.RefObject<HTMLInputElement>
+                        );
+                      }
+                    }
+                  }}
+                />
+              );
+              if (currentPage + 1 < lastPage) {
+                pageButtons.push(renderPageBtn(lastPage, false));
+              }
+            }
+          }
+          return pageButtons;
+        })()}
       </div>
 
       {/* Results Summary */}

@@ -35,10 +35,8 @@ const ProjectViewPage = () => {
       try {
         const { data } = await axios.get(`/api/project/${id}`);
         setProject(data.data);
-        setError(null);
       } catch {
         setError("Project not found.");
-        setProject(null);
       } finally {
         setLoading(false);
       }
@@ -79,19 +77,14 @@ const ProjectViewPage = () => {
         </div>
 
         <div className="flex flex-col justify-center sm:justify-start flex-1 min-w-0">
-          <h1
-            className="text-2xl sm:text-3xl font-bold truncate"
-            title={project.title}
-          >
-            {project.title}
-          </h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">{project.title}</h1>
           <span className="text-muted-foreground text-sm mt-2">
-            Created: <DateDisplay date={project.createdAt} />
+            <DateDisplay date={project.createdAt} />
           </span>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 justify-start">
+      <div className="flex flex-wrap gap-2">
         {technologies.map((tech) => (
           <Badge key={tech} variant="secondary" className="text-xs">
             {tech}
@@ -99,16 +92,14 @@ const ProjectViewPage = () => {
         ))}
       </div>
 
-      <p className="text-base sm:text-lg text-left max-w-full whitespace-pre-line">
+      <p className="text-base sm:text-lg whitespace-pre-line">
         {project.description}
       </p>
 
       {project.link && (
-        <div className="flex justify-start">
-          <Link href={project.link} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline">View App</Button>
-          </Link>
-        </div>
+        <Link href={project.link} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline">View App</Button>
+        </Link>
       )}
     </div>
   );
