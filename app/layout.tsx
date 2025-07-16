@@ -6,7 +6,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "./_components/common/Footer";
 import BreadcrumbsWrapper from "./_components/common/BreadcrumbsWrapper";
-import VHFixer from "./_components/common/VHFixer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,7 +62,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <VHFixer />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -71,7 +69,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <main className="flex flex-col min-h-mobile-screen">
+            <main className="flex flex-col min-h-dvh">
               <BreadcrumbsWrapper />
               <div className="mt-4 flex-1">{children}</div>
               <Footer />

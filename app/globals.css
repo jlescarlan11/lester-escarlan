@@ -121,14 +121,8 @@
   }
 }
 
-@layer utilities {
-  .min-h-mobile-screen {
-    min-height: calc(var(--vh, 1vh) * 100);
-  }
-}
-
 main {
-  @apply max-w-4xl mx-auto px-4 min-h-[calc(var(--vh,1vh)_*_100)];
+  @apply max-w-4xl mx-auto px-4;
 }
 
 p {
@@ -152,7 +146,7 @@ h3 {
 }
 
 header {
-  @apply min-h-[calc(var(--vh,1vh)_*_100)] flex items-center leading-7;
+  @apply min-h-dvh flex items-center leading-7;
 }
 
 .section {
