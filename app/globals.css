@@ -128,7 +128,7 @@
 }
 
 main {
-  @apply max-w-4xl mx-auto px-4 min-h-mobile-screen;
+  @apply max-w-4xl mx-auto px-4 min-h-[calc(var(--vh,1vh)_*_100)];
 }
 
 p {
@@ -152,7 +152,7 @@ h3 {
 }
 
 header {
-  @apply min-h-mobile-screen flex items-center leading-7;
+  @apply min-h-[calc(var(--vh,1vh)_*_100)] flex items-center leading-7;
 }
 
 .section {

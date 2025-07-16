@@ -6,7 +6,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Footer from "./_components/common/Footer";
 import BreadcrumbsWrapper from "./_components/common/BreadcrumbsWrapper";
-import { useEffect } from "react";
+import VHFixer from "./_components/common/VHFixer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,20 +58,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    function setVh() {
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-    }
-    setVh();
-    window.addEventListener('resize', setVh);
-    return () => window.removeEventListener('resize', setVh);
-  }, []);
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <VHFixer />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -79,7 +71,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <main className="flex flex-col min-h-dvh">
+            <main className="flex flex-col min-h-mobile-screen">
               <BreadcrumbsWrapper />
               <div className="mt-4 flex-1">{children}</div>
               <Footer />
