@@ -333,7 +333,7 @@ const ProjectCardList = ({
 
           if (totalPages <= 1) {
             // Only one page, show [1] [input]
-            pageButtons.push(renderPageBtn(0));
+            pageButtons.push(renderPageBtn(0, currentPage === 0));
             if (showInput) {
               pageButtons.push(
                 <input
@@ -360,8 +360,8 @@ const ProjectCardList = ({
             }
           } else if (totalPages === 2) {
             // [1] [2] [input]
-            pageButtons.push(renderPageBtn(0));
-            pageButtons.push(renderPageBtn(1));
+            pageButtons.push(renderPageBtn(0, currentPage === 0));
+            pageButtons.push(renderPageBtn(1, currentPage === 1));
             if (showInput) {
               pageButtons.push(
                 <input
@@ -388,7 +388,8 @@ const ProjectCardList = ({
             }
           } else if (totalPages === 3) {
             // [1] [2] [3] [input]
-            for (let i = 0; i < 3; i++) pageButtons.push(renderPageBtn(i));
+            for (let i = 0; i < 3; i++)
+              pageButtons.push(renderPageBtn(i, currentPage === i));
             if (showInput) {
               pageButtons.push(
                 <input

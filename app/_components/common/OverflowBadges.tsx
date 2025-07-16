@@ -66,7 +66,7 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
             variant="secondary"
             className="text-xs whitespace-nowrap"
           >
-            {technology}
+            {technology.toLowerCase()}
           </Badge>
         ))}
         {visibleCount < technologies.length && (
