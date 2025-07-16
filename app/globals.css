@@ -118,8 +118,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
   }
 }
 
@@ -153,9 +151,4 @@ header {
 
 .section {
   @apply flex flex-col justify-center leading-7  my-48;
-}
-
-[data-sonner-toast][data-swiped=true] {
-  user-select: none;
-  -webkit-user-select: none;
 }
