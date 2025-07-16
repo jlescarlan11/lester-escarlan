@@ -89,7 +89,8 @@ async function findProjectById(id: string) {
 function createErrorResponse(error: unknown, defaultMessage: string) {
   const message = error instanceof Error ? error.message : defaultMessage;
   const status = message === "Project not found" ? 404 : 500;
-  return NextResponse.json({ error: message }, { status });
+  const defaultHeaders = { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" };
+  return NextResponse.json({ error: message }, { status, headers: defaultHeaders });
 }
 
 export async function PUT(request: NextRequest) {
@@ -98,7 +99,7 @@ export async function PUT(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Project ID is required" },
-        { status: 400 }
+        { status: 400, headers: { "Content-Type": "application/json; charset=utf-8" } }
       );
     }
 
@@ -118,7 +119,7 @@ export async function PUT(request: NextRequest) {
           error: "Validation failed",
           details: validationResult.error.issues,
         },
-        { status: 400 }
+        { status: 400, headers: { "Content-Type": "application/json; charset=utf-8" } }
       );
     }
 
@@ -149,7 +150,7 @@ export async function PUT(request: NextRequest) {
       success: true,
       data: updatedProject,
       message: "Project updated successfully",
-    });
+    }, { headers: { "Content-Type": "application/json; charset=utf-8" } });
   } catch (error) {
     console.error("Project update error:", error);
     return createErrorResponse(error, "Failed to update project");
@@ -162,7 +163,7 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Project ID is required" },
-        { status: 400 }
+        { status: 400, headers: { "Content-Type": "application/json; charset=utf-8" } }
       );
     }
 
@@ -177,7 +178,7 @@ export async function DELETE(request: NextRequest) {
       success: true,
       data: deletedProject,
       message: "Project deleted successfully",
-    });
+    }, { headers: { "Content-Type": "application/json; charset=utf-8" } });
   } catch (error) {
     console.error("Project delete error:", error);
     return createErrorResponse(error, "Failed to delete project");
@@ -190,12 +191,12 @@ export async function GET(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Project ID is required" },
-        { status: 400 }
+        { status: 400, headers: { "Content-Type": "application/json; charset=utf-8" } }
       );
     }
 
     const project = await findProjectById(id);
-    return NextResponse.json({ success: true, data: project });
+    return NextResponse.json({ success: true, data: project }, { headers: { "Content-Type": "application/json; charset=utf-8" } });
   } catch (error) {
     console.error("Project fetch error:", error);
     return createErrorResponse(error, "Failed to fetch project");

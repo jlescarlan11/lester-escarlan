@@ -17,6 +17,7 @@ const AboutSection = () => {
             height={about.image.height}
             alt={about.image.alt}
             className="rounded-lg"
+            priority
           />
         </div>
         <div className="col-span-2 text-lg space-y-4">

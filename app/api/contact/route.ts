@@ -26,12 +26,14 @@ export async function POST(req: Request) {
       html,
     });
     
-    return NextResponse.json({ success: true });
+    const defaultHeaders = { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" };
+    return NextResponse.json({ success: true }, { headers: defaultHeaders });
   } catch (error) {
     console.error("Failed to send email:", error);
+    const defaultHeaders = { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" };
     return NextResponse.json(
       { error: "Failed to send email" },
-      { status: 500 }
+      { status: 500, headers: defaultHeaders }
     );
   }
 } 

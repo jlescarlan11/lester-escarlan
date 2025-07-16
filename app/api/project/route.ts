@@ -11,6 +11,8 @@ const supabase = createClient(
 
 export const revalidate = 1209600; // 2 weeks
 
+const defaultHeaders = { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" };
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -28,7 +30,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { error: "Validation failed", details: validationResult.error.issues },
-        { status: 400 }
+        { status: 400, headers: defaultHeaders }
       );
     }
 
@@ -45,14 +47,14 @@ export async function POST(request: NextRequest) {
       if (!allowedTypes.includes(image.type)) {
         return NextResponse.json(
           { error: "Invalid file type. Only JPEG, PNG, and WebP are allowed." },
-          { status: 400 }
+          { status: 400, headers: defaultHeaders }
         );
       }
 
       if (image.size > maxSize) {
         return NextResponse.json(
           { error: "File too large. Maximum size is 5MB." },
-          { status: 400 }
+          { status: 400, headers: defaultHeaders }
         );
       }
 
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
       if (uploadError) {
         return NextResponse.json(
           { error: "Failed to upload image", details: uploadError.message },
-          { status: 500 }
+          { status: 500, headers: defaultHeaders }
         );
       }
 
@@ -97,14 +99,14 @@ export async function POST(request: NextRequest) {
       success: true,
       data: newProject,
       message: "Project created successfully",
-    });
+    }, { headers: defaultHeaders });
   } catch (error) {
     return NextResponse.json(
       {
         error: "Failed to create project",
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 }
+      { status: 500, headers: defaultHeaders }
     );
   }
 }
@@ -114,12 +116,12 @@ export async function GET() {
     const projects = await prisma.project.findMany({
       orderBy: { createdAt: "desc" },
     });
-    return NextResponse.json({ success: true, data: projects });
+    return NextResponse.json({ success: true, data: projects }, { headers: defaultHeaders });
   } catch (error) {
     console.error("Failed to fetch projects:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch projects" },
-      { status: 500 }
+      { status: 500, headers: defaultHeaders }
     );
   }
 }
