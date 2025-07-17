@@ -17,7 +17,7 @@ const experience = {
     {
       company: "Alliance Software Inc.",
       position: "Software Developer Intern",
-      period: "June - July 2025",
+      period: "June 2025 - July 2025",
       details: [
         "Built web applications using C# and ASP.NET for client projects with focus on functionality and user experience.",
         "Worked with cross-functional teams to deliver software solutions within project timelines.",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LuArrowRight } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
@@ -42,30 +42,29 @@ const ProjectSection = () => {
     fetchProjects();
   }, []);
 
-  const LoadingState = () => (
-    <section className="section">
-      <SectionTitle section={section} description={sectionDescription} />
-      <div className="flex flex-col items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2" />
-        <p className="text-muted-foreground">Loading projects...</p>
-      </div>
-    </section>
-  );
+  if (loading)
+    return (
+      <section className="section">
+        <SectionTitle section={section} description={sectionDescription} />
+        <div className="flex flex-col items-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2" />
+          <p className="text-muted-foreground">Loading projects...</p>
+        </div>
+      </section>
+    );
 
-  const ErrorState = () => (
-    <section className="section">
-      <SectionTitle section={section} description={sectionDescription} />
-      <div className="flex flex-col items-center py-8">
-        <p className="text-destructive mb-2">{error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>
-          Try Again
-        </Button>
-      </div>
-    </section>
-  );
-
-  if (loading) return <LoadingState />;
-  if (error) return <ErrorState />;
+  if (error)
+    return (
+      <section className="section">
+        <SectionTitle section={section} description={sectionDescription} />
+        <div className="flex flex-col items-center py-8">
+          <p className="text-destructive mb-2">{error}</p>
+          <Button variant="outline" onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </section>
+    );
 
   return (
     <section className="section">
@@ -76,20 +75,21 @@ const ProjectSection = () => {
           <p className="opacity-60">No featured projects available</p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {projects.map((project) => (
-            <SharedCard
-              key={project.id}
-              logo={project.preview || "/alliance-logo.svg"}
-              mainTitle={project.title}
-              subTitle={project.status}
-              period={project.createdAt}
-              details={[project.description]}
-              technologies={project.technologies}
-              link={project.link}
-            />
-          ))}
-
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {projects.map((project) => (
+              <SharedCard
+                key={project.id}
+                logo={project.preview || "/alliance-logo.svg"}
+                mainTitle={project.title}
+                subTitle={project.status}
+                period={project.createdAt}
+                details={[project.description]}
+                technologies={project.technologies}
+                link={project.link}
+              />
+            ))}
+          </div>
           <div className="text-start mt-12">
             <Link
               href="/project"
@@ -104,7 +104,7 @@ const ProjectSection = () => {
               <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
           </div>
-        </div>
+        </>
       )}
     </section>
   );

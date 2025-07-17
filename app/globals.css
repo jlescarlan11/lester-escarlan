@@ -126,7 +126,7 @@ main {
 }
 
 p {
-  @apply text-sm leading-7 lg:text-base mb-4;
+  @apply text-sm leading-7 lg:text-base mb-4 text-pretty;
 }
 
 h1 {
