@@ -217,13 +217,13 @@ const TechCard = ({ tech }: { tech: string }) => {
   const Icon = TECH_ICONS[tech as keyof typeof TECH_ICONS];
 
   return (
-    <div className="flex flex-col items-center justify-center text-center border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-neutral-900 shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex flex-col items-center justify-center text-center bg-muted border-1 border-muted-foreground/30 shadow-sm rounded-lg p-3 hover:shadow-md transition-shadow">
       {Icon ? (
         <Icon size={40} className="mb-2 text-primary" />
       ) : (
         <span className="mb-2 text-primary text-3xl">?</span>
       )}
-      <span className="text-xs mt-1 opacity-80">{tech}</span>
+      <span className="text-xs mt-1 opacity-80 break-words">{tech}</span>
     </div>
   );
 };
@@ -235,7 +235,7 @@ const TechStackSection = () => {
     <section className="section">
       <SectionTitle section="Technologies" description="What I use and know" />
       <p className="mb-4">{techStack.intro}</p>
-      <div className="space-y-8">
+      <div className="">
         {Object.entries(CATEGORIES).map(([category, techs]) => {
           const availableTechs = techs.filter((tech) => userTechs.has(tech));
 
@@ -244,7 +244,7 @@ const TechStackSection = () => {
           return (
             <div key={category}>
               <h3 className="text-lg font-semibold mb-2">{category}</h3>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-6">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                 {availableTechs.map((tech) => (
                   <TechCard key={tech} tech={tech} />
                 ))}
