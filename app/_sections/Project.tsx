@@ -84,7 +84,11 @@ const ProjectSection = () => {
                 mainTitle={project.title}
                 subTitle={project.status}
                 period={project.createdAt}
-                details={[project.description]}
+                details={project.description
+                  .split(".")
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                  .map((s) => s + ".")}
                 technologies={project.technologies}
                 link={project.link}
               />

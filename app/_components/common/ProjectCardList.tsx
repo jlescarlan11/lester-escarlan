@@ -62,10 +62,9 @@ const ProjectCardList = ({
   }, [data, searchQuery]);
 
   const totalPages = Math.ceil(filteredProjects.length / pageSize);
-  const startIndex = currentPage * pageSize;
   const paginatedProjects = filteredProjects.slice(
-    startIndex,
-    startIndex + pageSize
+    currentPage * pageSize,
+    (currentPage + 1) * pageSize
   );
 
   React.useEffect(() => {
@@ -118,35 +117,55 @@ const ProjectCardList = ({
     const lastPage = totalPages - 1;
 
     if (totalPages <= 3) {
-      // Simple case: show all pages
+      // Simple cases: 1-3 pages, show all
       for (let i = 0; i < totalPages; i++) {
         buttons.push(renderPageButton(i, currentPage === i));
       }
-    } else if (currentPage <= 1) {
-      // Near beginning
-      buttons.push(renderPageButton(0, currentPage === 0));
-      buttons.push(renderPageButton(1, currentPage === 1));
-      buttons.push(renderPageButton(2, false));
-      buttons.push(renderPageInput());
-      if (lastPage > 2) buttons.push(renderPageButton(lastPage, false));
-    } else if (currentPage === lastPage) {
-      // At end
-      buttons.push(renderPageButton(lastPage - 2, false));
-      buttons.push(renderPageButton(lastPage - 1, false));
-      buttons.push(renderPageButton(lastPage, true));
-    } else {
-      // In middle
-      buttons.push(renderPageButton(currentPage - 1, false));
-      buttons.push(renderPageButton(currentPage, true));
-      buttons.push(renderPageButton(currentPage + 1, false));
-      buttons.push(renderPageInput());
-      if (currentPage + 1 < lastPage) {
-        buttons.push(renderPageButton(lastPage, false));
-      }
-    }
+    } else if (totalPages === 4) {
+      // 4-page logic with specific requirements
+      const pageConfigs = [
+        [0, 1, 2, "input", 3], // Page 1: [1 h] [2] [3] [input] [4]
+        [0, 1, 2, "input", 3], // Page 2: [1] [2 h] [3] [input] [4]
+        [1, 2, 3, "input"], // Page 3: [2] [3 h] [4] [input]
+        [1, 2, 3, "input"], // Page 4: [2] [3] [4 h] [input]
+      ];
 
-    if (totalPages > 3 && currentPage !== lastPage) {
-      buttons.push(renderPageInput());
+      pageConfigs[currentPage].forEach((item) => {
+        if (item === "input") {
+          buttons.push(renderPageInput());
+        } else {
+          buttons.push(renderPageButton(item as number, currentPage === item));
+        }
+      });
+    } else {
+      // More than 4 pages, always 5 boxes
+      if (currentPage <= 1) {
+        // [1/2] [2/3] [3] [input] [last]
+        buttons.push(renderPageButton(0, currentPage === 0));
+        buttons.push(renderPageButton(1, currentPage === 1));
+        buttons.push(renderPageButton(2, currentPage === 2));
+        buttons.push(renderPageInput());
+        if (2 < lastPage) buttons.push(renderPageButton(lastPage, false));
+      } else if (currentPage >= lastPage - 1) {
+        // [last-2] [last-1] [last] [input]
+        buttons.push(
+          renderPageButton(lastPage - 2, currentPage === lastPage - 2)
+        );
+        buttons.push(
+          renderPageButton(lastPage - 1, currentPage === lastPage - 1)
+        );
+        buttons.push(renderPageButton(lastPage, currentPage === lastPage));
+        buttons.push(renderPageInput());
+      } else {
+        // [current-1] [current] [current+1] [input] [last]
+        buttons.push(renderPageButton(currentPage - 1, false));
+        buttons.push(renderPageButton(currentPage, true));
+        buttons.push(renderPageButton(currentPage + 1, false));
+        buttons.push(renderPageInput());
+        if (currentPage + 1 < lastPage) {
+          buttons.push(renderPageButton(lastPage, false));
+        }
+      }
     }
 
     return buttons;
@@ -192,7 +211,7 @@ const ProjectCardList = ({
       {/* Search and Add Button Header */}
       <div className="flex flex-col gap-4 py-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="relative max-w-sm  min-w-full sm:min-w-fit">
+          <div className="relative max-w-sm min-w-full sm:min-w-fit">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search projects..."

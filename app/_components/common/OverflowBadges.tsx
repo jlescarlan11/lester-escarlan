@@ -60,15 +60,19 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
         ref={containerRef}
         className={`flex gap-2 overflow-hidden ${className || ""}`}
       >
-        {technologies.slice(0, visibleCount).map((technology) => (
-          <Badge
-            key={technology}
-            variant="secondary"
-            className="text-xs whitespace-nowrap"
-          >
-            {technology.toLowerCase()}
-          </Badge>
-        ))}
+        {technologies
+          .slice()
+          .sort((a, b) => a.localeCompare(b))
+          .slice(0, visibleCount)
+          .map((technology) => (
+            <Badge
+              key={technology}
+              variant="secondary"
+              className="text-xs whitespace-nowrap"
+            >
+              {technology.toLowerCase()}
+            </Badge>
+          ))}
         {visibleCount < technologies.length && (
           <Badge variant="secondary" className="text-xs whitespace-nowrap">
             +{technologies.length - visibleCount}
@@ -86,15 +90,18 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
         }}
         aria-hidden="true"
       >
-        {technologies.map((technology) => (
-          <Badge
-            key={technology}
-            variant="secondary"
-            className="text-xs whitespace-nowrap"
-          >
-            {technology}
-          </Badge>
-        ))}
+        {technologies
+          .slice()
+          .sort((a, b) => a.localeCompare(b))
+          .map((technology) => (
+            <Badge
+              key={technology}
+              variant="secondary"
+              className="text-xs whitespace-nowrap"
+            >
+              {technology}
+            </Badge>
+          ))}
       </div>
     </>
   );
