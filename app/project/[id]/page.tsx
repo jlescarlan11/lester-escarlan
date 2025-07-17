@@ -73,6 +73,7 @@ const ProjectViewPage = () => {
             fill
             className="object-cover"
             sizes="128px"
+            loading="lazy"
           />
         </div>
 

@@ -45,7 +45,9 @@ export function ProjectForm({
   onSuccess,
 }: ProjectFormProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(mode === "edit");
+  const isEditMode = mode === "edit";
+
+  const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
@@ -63,8 +65,6 @@ export function ProjectForm({
     },
   });
 
-  const isEditMode = mode === "edit";
-
   // Fetch project data for edit mode
   useEffect(() => {
     if (!isEditMode || !projectId) return;
@@ -77,6 +77,7 @@ export function ProjectForm({
         if (data.success) {
           const projectData = data.data;
           setProject(projectData);
+          setCroppedImage(projectData.preview || null);
 
           form.reset({
             title: projectData.title,
@@ -86,10 +87,6 @@ export function ProjectForm({
             technologies: projectData.technologies.join(", "),
             status: projectData.status,
           });
-
-          if (projectData.preview) {
-            setCroppedImage(projectData.preview);
-          }
         } else {
           setError("Failed to load project data");
         }
@@ -116,7 +113,7 @@ export function ProjectForm({
     form.setValue("image", "");
   };
 
-  async function onSubmit(values: ProjectFormValues) {
+  const onSubmit = async (values: ProjectFormValues) => {
     try {
       setIsSubmitting(true);
       setError(null);
@@ -140,17 +137,14 @@ export function ProjectForm({
 
       const url = isEditMode ? `/api/project/${projectId}` : "/api/project";
       const method = isEditMode ? "put" : "post";
-
       const response = await axios[method](url, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.data.success) {
-        const successMessage = isEditMode
-          ? "Project updated successfully!"
-          : "Project created successfully!";
-
-        toast.success(successMessage);
+        toast.success(
+          `Project ${isEditMode ? "updated" : "created"} successfully!`
+        );
         onSuccess();
         router.push("/admin/project");
       }
@@ -166,14 +160,12 @@ export function ProjectForm({
 
       setError(errorMessage);
       toast.error(
-        isEditMode
-          ? "Failed to update project. Please try again."
-          : "Failed to create project. Please try again."
+        `Failed to ${isEditMode ? "update" : "create"} project. Please try again.`
       );
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -212,6 +204,7 @@ export function ProjectForm({
               height={0}
               className="rounded-md border w-full h-full object-cover"
               unoptimized
+              loading="lazy"
             />
             <Button
               variant="default"
@@ -332,12 +325,8 @@ export function ProjectForm({
             </Button>
             <Button type="submit" className="flex-1" disabled={isSubmitting}>
               {isSubmitting
-                ? isEditMode
-                  ? "Updating..."
-                  : "Creating..."
-                : isEditMode
-                  ? "Update Project"
-                  : "Create Project"}
+                ? `${isEditMode ? "Updating" : "Creating"}...`
+                : `${isEditMode ? "Update" : "Create"} Project`}
             </Button>
           </div>
         </form>
