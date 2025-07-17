@@ -49,7 +49,7 @@ const SharedCard = ({
       )}
     >
       <div className="flex gap-4 items-start">
-        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center bg-muted border-2 border-muted-foreground/30 shadow-sm">
+        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center bg-muted border-1 border-muted-foreground/30 shadow-sm">
           <Image
             src={logo}
             alt={`${mainTitle} logo`}
