@@ -29,11 +29,10 @@ const SharedCard = ({
   className = "",
 }: SharedCardProps) => {
   const detailsText = Array.isArray(details) ? details.join(" ") : details;
-
-  const isValidDate = (date: string | Date): boolean => {
-    if (typeof date === "string") return !isNaN(Date.parse(date));
-    return date instanceof Date && !isNaN(date.getTime());
-  };
+  const isValidDate =
+    typeof period === "string"
+      ? !isNaN(Date.parse(period))
+      : period instanceof Date && !isNaN(period.getTime());
 
   return (
     <Card
@@ -53,13 +52,13 @@ const SharedCard = ({
         />
       </div>
 
-      <div className="flex-1 flex flex-col mt-1 justify-center">
+      <div className="flex-1 mt-1">
         <h3 className="font-bold text-base leading-tight">{mainTitle}</h3>
 
-        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5 flex-wrap">
           <span>{subTitle}</span>
           <span>•</span>
-          {isValidDate(period) ? (
+          {isValidDate ? (
             <DateDisplay date={period} />
           ) : (
             <span>{period instanceof Date ? period.toString() : period}</span>

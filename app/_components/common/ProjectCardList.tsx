@@ -192,7 +192,7 @@ const ProjectCardList = ({
       {/* Search and Add Button Header */}
       <div className="flex flex-col gap-4 py-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="relative max-w-sm">
+          <div className="relative max-w-sm  min-w-full sm:min-w-fit">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search projects..."

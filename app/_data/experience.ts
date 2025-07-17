@@ -5,7 +5,7 @@ const experience = {
     {
       company: "Wind's Gate Philippines",
       position: "Part Time Monitoring Team",
-      period: "Jun 2025 - Present",
+      period: "June 2025 - Present",
       details: [
         "Monitor system errors across databases, crypto platforms, and various applications to ensure operational stability.",
         "Interpret Japanese error messages and technical documentation to support international operations.",
@@ -17,7 +17,7 @@ const experience = {
     {
       company: "Alliance Software Inc.",
       position: "Software Developer Intern",
-      period: "Jun 2025 - July 2025",
+      period: "June - July 2025",
       details: [
         "Built web applications using C# and ASP.NET for client projects with focus on functionality and user experience.",
         "Worked with cross-functional teams to deliver software solutions within project timelines.",
