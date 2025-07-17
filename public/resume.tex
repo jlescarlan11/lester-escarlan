@@ -43,7 +43,7 @@
 \newenvironment{highlights}{\begin{itemize}[topsep=0.10cm,parsep=0.10cm,partopsep=0pt,itemsep=0pt,leftmargin=0cm+10pt]}{\end{itemize}}
 \newenvironment{highlightsforbulletentries}{\begin{itemize}[topsep=0.10cm,parsep=0.10cm,partopsep=0pt,itemsep=0pt,leftmargin=10pt]}{\end{itemize}}
 \newenvironment{onecolentry}{\begin{adjustwidth}{0cm+0.00001cm}{0cm+0.00001cm}}{\end{adjustwidth}}
-\newenvironment{twocolentry}[2][]{\onecolentry\def\secondColumn{#2}\setcolumnwidth{\fill,8cm}\begin{paracol}{2}}{\switchcolumn \raggedleft \secondColumn\end{paracol}\endonecolentry}
+\newenvironment{twocolentry}[2][]{\onecolentry\def\secondColumn{#2}\setcolumnwidth{\fill,5cm}\begin{paracol}{2}}{\switchcolumn \raggedleft \secondColumn\end{paracol}\endonecolentry}
 \newenvironment{threecolentry}[3][]{\onecolentry\def\thirdColumn{#3}\setcolumnwidth{,\fill,4.5cm}\begin{paracol}{3}{\raggedright #2}\switchcolumn}{\switchcolumn \raggedleft \thirdColumn\end{paracol}\endonecolentry}
 \newenvironment{header}{\setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}}{\par\kern\topsep}
 \let\hrefWithoutArrow\href
@@ -52,7 +52,6 @@
     \fontsize{25pt}{25pt}\selectfont John Lester Escarlan
     \vspace{5pt}
     \normalsize
-    % Contact details in one line
     \mbox{Cebu City, Philippines \kern 5.0pt | \kern 5.0pt 
       \hrefWithoutArrow{mailto:jlescarlan11@gmail.com}{jlescarlan11@gmail.com} \kern 5.0pt | \kern 5.0pt 
       \hrefWithoutArrow{tel:09957128195}{09957128195} \kern 5.0pt | \kern 5.0pt 
@@ -60,15 +59,10 @@
       \hrefWithoutArrow{https://www.linkedin.com/in/john-lester-escarlan/}{LinkedIn}}
 \end{header}
 \vspace{5pt-0.3cm}
-\section{About Me}
-\begin{onecolentry}
-    \begin{highlightsforbulletentries}
-        \item Computer Science student at UP Cebu with practical experience in full-stack development. I build web applications using React, Node.js, and work with databases to create functional solutions that solve real problems.
-        \item My background in Mathematics provides strong analytical thinking for problem-solving and algorithm development. I have professional experience in system monitoring, error diagnosis, and web application development using C\# and ASP.NET in team environments.
-    \end{highlightsforbulletentries}
-\end{onecolentry}
+
 \section{Education}
-    \begin{twocolentry}{2025 - present}
+
+    \begin{twocolentry}{August 2025 - present}
         \textbf{University of the Philippines Cebu}, BSc in Computer Science\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
@@ -79,7 +73,7 @@
     \end{onecolentry}
     \vspace{0.15cm}
 
-    \begin{twocolentry}{2022 - 2025}
+    \begin{twocolentry}{September 2022 - June 2025}
         \textbf{University of the Philippines Cebu}, BSc in Mathematics\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
@@ -92,6 +86,7 @@
     \vspace{0.15cm}
 
 \section{Work Experience}
+
     \begin{twocolentry}{June 2025 - Present}
         \textbf{Wind's Gate Philippines}, Part Time Monitoring Team\end{twocolentry}
     \vspace{0.10cm}
@@ -117,32 +112,26 @@
     \vspace{0.15cm}
 
 \section{Projects}
-
-    \begin{twocolentry}{2025}
-      \textbf{Nutcha Bites}\end{twocolentry}
+    \begin{twocolentry}{July 2025}
+        \textbf{\underline{\href{https://nutcha-bites.vercel.app/}{Nutcha Bites}}} | react, vite, typescript, tailwin css\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-      \begin{highlights}
-        \item E-commerce app that features product catalog, cart management, checkout flow. Learned type safety and component architecture.
-        \item Tools Used: react, vite, typescript, tailwin css
-        \item Live Demo: \href{https://nutcha-bites.vercel.app/}{https://nutcha-bites.vercel.app/}
-      \end{highlights}
+        \begin{highlights}
+            \item E-commerce app that features product catalog, cart management, checkout flow.
+            \item Learned type safety and component architecture.
+        \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
-  
-\section{Technologies}
+
+\section{Technical Skills}
 \begin{onecolentry}
-    \textbf{Frontend:} \
-    Bootstrap, Context API, CSS, CSS Modules, esbuild, HTML, Material-UI, Next.js, PostCSS, React, Tailwind CSS, Vite, Webpack \
+    \textbf{Programming Languages:} C\#, C++, CSS, HTML, Java, JavaScript, Kotlin, PHP, Python, SQL, TypeScript \\
     \vspace{0.10cm}
-    \\ \textbf{Backend:} \
-    .NET 5+, .NET Core, .NET Framework, ASP.NET, ASP.NET Core, Entity Framework, Express.js, Laravel, Node.js, Spring Boot, Spring Framework \
+    \textbf{Frameworks:} ASP.NET Core, Express.js, Laravel, Next.js, Node.js, Spring Boot \\
     \vspace{0.10cm}
-    \\ \textbf{Database:} \
-    MongoDB, MySQL, Oracle, PostgreSQL, Redis, SQL Server, SQLite \
+    \textbf{Developer Tools:} Git, IntelliJ IDEA, Postman, Visual Studio Code, Vite, Webpack \\
     \vspace{0.10cm}
-    \\ \textbf{Others:} \
-    Assembly, Bash, C, C\#, C++, conda, Git, GitHub, GitHub Actions, IntelliJ IDEA, Java, JavaScript, JWT, Kotlin, Netlify, NoSQL, npm, NuGet, OAuth, PHP, pip, pnpm, Postman, PowerShell, Python, R, Railway, Render, Solidity, SQL, Supabase, TypeScript, Vercel, Visual Studio, Visual Studio Code, yarn \
+    \textbf{Libraries:} Bootstrap, Material-UI, React, Tailwind CSS \\
     \vspace{0.10cm}
 
 \end{onecolentry}

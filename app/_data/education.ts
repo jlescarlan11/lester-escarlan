@@ -5,7 +5,7 @@ const education = {
     {
       institution: "University of the Philippines Cebu",
       degree: "BSc in Computer Science",
-      period: "2025 - present",
+      period: "August 2025 - present",
       details: [
         "Learning software engineering principles and system design.",
         "Coursework includes data structures, algorithms, and database systems.",
@@ -16,7 +16,7 @@ const education = {
     {
       institution: "University of the Philippines Cebu",
       degree: "BSc in Mathematics",
-      period: "2022 - 2025",
+      period: "September 2022 - June 2025",
       details: [
         "Focused on computational methods and algorithm analysis.",
         "Applied mathematical problem-solving to programming challenges.",
