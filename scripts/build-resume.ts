@@ -297,10 +297,11 @@ const generateLatexContent = (
     \\vspace{5pt}
     \\normalsize
     \\mbox{${escapeLatex(contact.contactInfo.address)} \\kern 5.0pt | \\kern 5.0pt 
-      \\hrefWithoutArrow{mailto:${escapeLatex(contact.contactInfo.email)}}{${escapeLatex(contact.contactInfo.email)}} \\kern 5.0pt | \\kern 5.0pt 
-      \\hrefWithoutArrow{tel:${escapeLatex(contact.contactInfo.phone)}}{${escapeLatex(contact.contactInfo.phone)}} \\kern 5.0pt | \\kern 5.0pt 
-      \\hrefWithoutArrow{${escapeLatex(contact.contactInfo.github)}}{GitHub} \\kern 5.0pt | \\kern 5.0pt 
-      \\hrefWithoutArrow{${escapeLatex(contact.contactInfo.linkedin)}}{LinkedIn}}
+      \\underline{\\hrefWithoutArrow{mailto:${escapeLatex(contact.contactInfo.email)}}{${escapeLatex(contact.contactInfo.email)}}} \\kern 5.0pt | \\kern 5.0pt 
+      \\underline{\\hrefWithoutArrow{tel:${escapeLatex(contact.contactInfo.phone)}}{${escapeLatex(contact.contactInfo.phone)}}} \\kern 5.0pt | \\kern 5.0pt 
+      \\underline{\\hrefWithoutArrow{${escapeLatex(contact.contactInfo.github)}}{GitHub}} \\kern 5.0pt | \\kern 5.0pt 
+      \\underline{\\hrefWithoutArrow{${escapeLatex(contact.contactInfo.linkedin)}}{LinkedIn}} \\kern 5.0pt | \\kern 5.0pt 
+      \\underline{\\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{Portfolio}}}
 \\end{header}
 \\vspace{5pt-0.3cm}
 
