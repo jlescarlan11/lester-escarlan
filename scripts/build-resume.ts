@@ -3,104 +3,70 @@ import path from "path";
 import latex from "node-latex";
 import axios from "axios";
 import techStack from "../app/_data/techStack";
-
-// Import data modules
-const aboutModule = require("../app/_data/about").default;
-const about = {
-  aboutMe: aboutModule.aboutMe,
-  techStack: aboutModule.techStack,
-};
 import education from "../app/_data/education";
 import experience from "../app/_data/experience";
 import header from "../app/_data/header";
 import contact from "../app/_data/contact";
 
-// Technical Skills Categories - Focused on Popular/Famous Technologies
+// Type definitions
+interface ProjectData {
+  title: string;
+  description: string;
+  technologies: string[] | string;
+  link?: string;
+  createdAt?: string;
+  status: string;
+}
+
+interface EducationData {
+  institution: string;
+  degree: string;
+  period: string;
+  gwa?: string;
+  details: string[];
+}
+
+interface ExperienceData {
+  company: string;
+  position: string;
+  period: string;
+  details: string[];
+}
+
+// Technical Skills Categories - Focused and Realistic for Junior Developer
 const TECHNICAL_SKILLS_CATEGORIES = {
   languages: [
-    "JavaScript",
+    "C#",
+    "JavaScript", 
     "TypeScript",
     "Python",
-    "Java",
-    "C#",
-    "C++",
-    "Go",
-    "Rust",
-    "PHP",
-    "Ruby",
-    "Swift",
-    "Kotlin",
-    "Dart",
     "SQL",
-    "GraphQL",
     "HTML",
-    "CSS",
+    "CSS"
   ],
   frameworks: [
-    "Vue.js",
-    "Angular",
-    "Svelte",
-    "Next.js",
-    "Nuxt.js",
-    "Node.js",
-    "Express.js",
-    "NestJS",
-    "Django",
-    "Flask",
-    "FastAPI",
-    "Spring Boot",
     "ASP.NET Core",
-    "Laravel",
-    "Ruby on Rails",
-    "React Native",
-    "Flutter",
-    "TensorFlow",
-    "PyTorch",
-    "Unity",
+    "Next.js",
+    "React",
+    "Node.js"
   ],
   tools: [
     "Git",
     "Visual Studio Code",
-    "IntelliJ IDEA",
-    "Docker",
-    "Kubernetes",
-    "Webpack",
-    "Vite",
-    "Jenkins",
-    "Terraform",
-    "AWS",
-    "Azure",
-    "Google Cloud",
-    "Jest",
-    "Cypress",
-    "Selenium",
     "Postman",
-    "Figma",
-    "Jira",
-    "Notion",
+    "Vite"
+  ],
+  databases: [
+    "Supabase",
+    "Prisma",
+    "SQL Server"
   ],
   libraries: [
-    "React",
-    "Redux",
     "Tailwind CSS",
     "Bootstrap",
-    "Material-UI",
-    "Styled Components",
-    "Pandas",
-    "NumPy",
-    "Matplotlib",
-    "Axios",
-    "Socket.io",
-    "Three.js",
-    "D3.js",
-    "Chart.js",
-    "Lodash",
-    "Moment.js",
-    "jQuery",
-    "Prisma",
-    "Mongoose",
-    "Sequelize",
-  ],
+    "Radix UI",
+    "Material-UI"
+  ]
 };
 
 // Utility functions
@@ -124,13 +90,13 @@ const escapeLatex = (str: string): string => {
 const sortTechs = (techs: string[]): string[] =>
   techs.sort((a, b) => a.localeCompare(b));
 
-const fetchProjects = async () => {
+const fetchProjects = async (): Promise<ProjectData[]> => {
   try {
     const response = await axios.get("http://localhost:3000/api/project");
     return response.data.success && Array.isArray(response.data.data)
-      ? response.data.data.filter((p: any) => p.status === "featured")
+      ? response.data.data.filter((p: ProjectData) => p.status === "featured")
       : [];
-  } catch (err) {
+  } catch {
     console.warn(
       "Warning: Could not fetch projects. Is your dev server running?"
     );
@@ -151,9 +117,22 @@ const categorizeUserTechs = (userTechs: string[]) => {
   return categorized;
 };
 
-const formatEducation = (edu: any) => `
+// NEW: Format professional summary
+const formatSummary = (summary: string) => `
+\\section{Professional Summary}
+\\begin{onecolentry}
+    ${escapeLatex(summary)}
+\\end{onecolentry}
+\\vspace{0.15cm}`;
+
+// UPDATED: Format education with gwa placeholder
+const formatEducation = (edu: EducationData): string => {
+  const gwaLine = edu.gwa ? `GWA: ${escapeLatex(edu.gwa)}` : `GWA: [Add if 3.0 or higher]`;
+  
+  return `
     \\begin{twocolentry}{${escapeLatex(edu.period)}}
-        \\textbf{${escapeLatex(edu.institution)}}, ${escapeLatex(edu.degree)}\\end{twocolentry}
+        \\textbf{${escapeLatex(edu.institution)}} | ${escapeLatex(edu.degree)}\\\\
+        ${gwaLine}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
         \\begin{highlights}
@@ -161,10 +140,12 @@ ${edu.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\
         \\end{highlights}
     \\end{onecolentry}
     \\vspace{0.15cm}`;
+};
 
-const formatExperience = (exp: any) => `
+// UPDATED: Format experience with better structure
+const formatExperience = (exp: ExperienceData): string => `
     \\begin{twocolentry}{${escapeLatex(exp.period)}}
-        \\textbf{${escapeLatex(exp.company)}}, ${escapeLatex(exp.position)}\\end{twocolentry}
+        \\textbf{${escapeLatex(exp.company)}} | ${escapeLatex(exp.position)}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
         \\begin{highlights}
@@ -173,7 +154,8 @@ ${exp.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\
     \\end{onecolentry}
     \\vspace{0.15cm}`;
 
-const formatProject = (proj: any) => {
+// UPDATED: Format projects with better tech display
+const formatProject = (proj: ProjectData): string => {
   let dateString = "";
   if (proj.createdAt) {
     try {
@@ -185,7 +167,7 @@ const formatProject = (proj: any) => {
         };
         dateString = date.toLocaleDateString("en-US", options);
       }
-    } catch (e) {
+    } catch {
       // Silent catch for invalid dates
     }
   }
@@ -198,20 +180,20 @@ const formatProject = (proj: any) => {
     ? `\\textbf{\\underline{\\href{${escapeLatex(proj.link)}}{${escapeLatex(proj.title)}}}}`
     : `\\textbf{${escapeLatex(proj.title)}}`;
 
-  // Split description by periods and create bullet points
+  // Enhanced description formatting with metric placeholders
   const descriptionBullets = proj.description
     ? proj.description
         .split(".")
         .map((sentence: string) => sentence.trim())
         .filter((sentence: string) => sentence.length > 0)
-        .map(
-          (sentence: string) => `            \\item ${escapeLatex(sentence)}.`
-        )
+        .map((sentence: string) => {
+          return `            \\item ${escapeLatex(sentence)}`;
+        })
         .join("\n")
     : `            \\item ${escapeLatex(proj.description || "")}`;
 
   return `    \\begin{twocolentry}{${escapeLatex(dateString)}}
-        ${projectTitle} | ${techsString}\\end{twocolentry}
+        ${projectTitle} | \\textit{${techsString}}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
         \\begin{highlights}
@@ -221,29 +203,35 @@ ${descriptionBullets}
     \\vspace{0.15cm}`;
 };
 
+// UPDATED: Format tech categories with better organization
 const formatTechCategories = (categorized: Record<string, string[]>) => {
   const categoryLabels: Record<string, string> = {
-    languages: "Programming Languages",
-    frameworks: "Frameworks",
-    tools: "Developer Tools",
-    libraries: "Libraries",
+    languages: "Languages",
+    frameworks: "Frameworks", 
+    tools: "Tools",
+    databases: "Databases",
+    libraries: "UI Libraries"
   };
 
-  return (
-    Object.entries(categorized)
-      .map(([category, techs]) => {
-        const label = categoryLabels[category] || escapeLatex(category);
-        return `    \\textbf{${label}:} ${techs.map(escapeLatex).join(", ")} \\\\\n    \\vspace{0.10cm}\n`;
-      })
-      .join("") || "    No technical skills found.\\\\\n"
-  );
+  // Ensure consistent order
+  const orderedCategories = ['languages', 'frameworks', 'tools', 'databases', 'libraries'];
+  
+  return orderedCategories
+    .filter(category => categorized[category] && categorized[category].length > 0)
+    .map(category => {
+      const label = categoryLabels[category] || escapeLatex(category);
+      return `    \\textbf{${label}:} ${categorized[category].map(escapeLatex).join(", ")} \\\\\n    \\vspace{0.05cm}\n`;
+    })
+    .join("") || "    No technical skills found.\\\\\n";
 };
 
+// UPDATED: Main LaTeX template with professional summary
 const generateLatexContent = (
-  projects: any[],
-  categorizedTechs: Record<string, string[]>
-) => `
-% Resume generated by build-resume.ts
+  projects: ProjectData[],
+  categorizedTechs: Record<string, string[]>,
+  professionalSummary: string = `${header.description}`
+): string => `
+% Resume generated by build-resume.ts - Professional Format
 
 \\documentclass[10pt, letterpaper]{article}
 \\usepackage[ignoreheadfoot,top=2cm,bottom=2cm,left=2cm,right=2cm,footskip=1.0cm]{geometry}
@@ -255,7 +243,7 @@ const generateLatexContent = (
 \\usepackage{enumitem}
 \\usepackage{fontawesome5}
 \\usepackage{amsmath}
-\\usepackage[pdftitle={${escapeLatex(header.name)}'s CV},pdfauthor={${escapeLatex(header.name)}},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,urlcolor=primaryColor]{hyperref}
+\\usepackage[pdftitle={${escapeLatex(header.name)} - Software Developer},pdfauthor={${escapeLatex(header.name)}},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,urlcolor=primaryColor]{hyperref}
 \\usepackage[pscoord]{eso-pic}
 \\usepackage{calc}
 \\usepackage{bookmark}
@@ -293,7 +281,9 @@ const generateLatexContent = (
 \\let\\hrefWithoutArrow\\href
 \\begin{document}
 \\begin{header}
-    \\fontsize{25pt}{25pt}\\selectfont ${escapeLatex(header.name)}
+    \\fontsize{25pt}{25pt}\\selectfont \\textbf{${escapeLatex(header.name)}}
+    \\vspace{3pt}
+    \\\\ \\fontsize{12pt}{12pt}\\selectfont \\textbf{${escapeLatex(header.role)}}
     \\vspace{5pt}
     \\normalsize
     \\mbox{${escapeLatex(contact.contactInfo.address)} \\kern 5.0pt | \\kern 5.0pt 
@@ -305,10 +295,12 @@ const generateLatexContent = (
 \\end{header}
 \\vspace{5pt-0.3cm}
 
+${formatSummary(professionalSummary)}
+
 \\section{Education}
 ${education.educationData.map(formatEducation).join("\n")}
 
-\\section{Work Experience}
+\\section{Experience}
 ${experience.experienceData.map(formatExperience).join("\n")}
 
 \\section{Projects}
@@ -341,13 +333,13 @@ ${formatTechCategories(categorizedTechs)}
   const pdf = latex(latexContent);
 
   pdf.pipe(output);
-  pdf.on("error", (err: any) => {
+  pdf.on("error", (err: Error) => {
     console.error("LaTeX build error:", err);
     process.exit(1);
   });
   pdf.on("finish", () => {
     console.log(
-      "Resume PDF generated at public/john_lester_escarlan_resume.pdf"
+      "Professional resume PDF generated at public/john_lester_escarlan_resume.pdf"
     );
   });
 })();

@@ -1,8 +1,8 @@
 const header = {
   name: "John Lester Escarlan",
-  role: "Computer Science Student & Developer",
+  role: "Software Engineer",
   description:
-    "Computer Science student at UP Cebu with hands-on experience in web development. I build applications using React, Node.js, and C#, with professional experience in system monitoring and application development.",
+    "A software engineer with hands-on experience in full-stack web development and system monitoring. Strong foundation in mathematics and computer science with practical experience building web applications using modern frameworks.",
   buttons: [
     { label: "Projects", link: "/project" },
     // { label: "Archive", link: "/archive" },
