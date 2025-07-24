@@ -6,7 +6,7 @@ const education = {
       institution: "University of the Philippines Cebu",
       degree: "BSc in Computer Science",
       period: "August 2025 - present",
-      gwa: "1.8",
+      gwa: "1.51",
       details: [
         "Currently studying software engineering and system design",
         "Relevant coursework: Data Structures, Algorithms, Database Systems"

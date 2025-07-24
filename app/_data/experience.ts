@@ -7,10 +7,10 @@ const experience = {
       position: "Part Time Monitoring Team",
       period: "June 2025 - Present",
       details: [
-        "Monitor system errors across databases and applications to prevent downtime",
-        "Process 50+ error reports daily to maintain system stability",
-        "Translate Japanese error messages and documentation for development teams",
-        "Document system failure patterns to help prevent recurring issues"
+        "Monitored system errors across databases and applications, preventing downtime and ensuring smooth operations",
+        "Processed over 50 error reports daily, maintaining system stability and reducing potential disruptions",
+        "Translated Japanese error messages and documentation for development teams, facilitating effective communication and problem-solving",
+        "Documented system failure patterns, aiding in the prevention of recurring issues and enhancing system reliability"
       ],
       technologies: ["slack", "java"],
       logo: "/windsgate-logo.svg",
@@ -21,9 +21,9 @@ const experience = {
       period: "June 2025 - July 2025",
       details: [
         "Built a web application using C# and ASP.NET for client projects",
-        "Worked with development team to deliver features on schedule",
-        "Followed coding standards and participated in code reviews",
-        "Completed assigned tasks within project deadlines"
+        "Collaborated with the development team to deliver features on schedule, ensuring timely project completion and client satisfaction",
+        "Adhered to coding standards and participated in code reviews, improving code quality and team collaboration",
+        "Completed assigned tasks within project deadlines, contributing to the successful and timely delivery of projects"
       ],
       technologies: ["asp", "csharp", "bootstrap", "supabase"],
       logo: "/alliance-logo.svg",
