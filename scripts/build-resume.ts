@@ -36,25 +36,33 @@ interface ExperienceData {
 // Technical Skills Categories - Focused and Realistic for Junior Developer
 const TECHNICAL_SKILLS_CATEGORIES = {
   languages: [
-    "C#",
-    "JavaScript", 
+    "JavaScript",
     "TypeScript",
     "Python",
+    "Java",
+    "C#",
+    "C++", 
     "SQL",
+    "GraphQL",
     "HTML",
-    "CSS"
+    "CSS",
   ],
   frameworks: [
     "ASP.NET Core",
     "Next.js",
     "React",
-    "Node.js"
+    "Node.js",
+    "Laravel",
+    "Express.js",
   ],
   tools: [
     "Git",
     "Visual Studio Code",
     "Postman",
-    "Vite"
+    "Vite",
+    "Figma",
+    "IntelliJ IDEA",
+    "Docker",
   ],
   databases: [
     "Supabase",
