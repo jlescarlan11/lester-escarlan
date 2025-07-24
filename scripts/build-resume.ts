@@ -129,7 +129,7 @@ const categorizeUserTechs = (userTechs: string[]) => {
 const formatSummary = (summary: string) => `
 \\section{Summary}
 \\begin{onecolentry}
-    \\small
+    
     ${escapeLatex(summary)}
 \\end{onecolentry}
 \\vspace{0.15cm}`;
@@ -144,7 +144,7 @@ const formatEducation = (edu: EducationData): string => {
     ${gwaLine}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        \\small
+        
         \\begin{highlights}
 ${edu.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\n")}
         \\end{highlights}
@@ -158,7 +158,7 @@ const formatExperience = (exp: ExperienceData): string => `
     \\textbf{${escapeLatex(exp.company)}} | ${escapeLatex(exp.position)}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        \\small
+        
     \\begin{highlights}
     ${exp.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\n")}
         \\end{highlights}
@@ -207,7 +207,7 @@ const formatProject = (proj: ProjectData): string => {
         ${projectTitle} | \\textit{${techsString}}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        \\small
+        
         \\begin{highlights}
 ${descriptionBullets}
         \\end{highlights}
@@ -232,7 +232,7 @@ const formatTechCategories = (categorized: Record<string, string[]>) => {
     .filter(category => categorized[category] && categorized[category].length > 0)
     .map(category => {
       const label = categoryLabels[category] || escapeLatex(category);
-      return `   \\small \\textbf{${label}:} ${categorized[category].map(escapeLatex).join(", ")} \\\\\n    \\vspace{0.05cm}\n`;
+      return `    \\textbf{${label}:} ${categorized[category].map(escapeLatex).join(", ")} \\\\\n    \\vspace{0.05cm}\n`;
     })
     .join("") || "    No technical skills found.\\\\\n";
 };
@@ -283,7 +283,7 @@ const generateLatexContent = (
 \\pagenumbering{gobble}
 \\titleformat{\\section}{\\needspace{4\\baselineskip}\\bfseries\\large}{}{0pt}{}[\\vspace{1pt}\\titlerule]
 \\titlespacing{\\section}{-1pt}{0.3cm}{0.2cm}
-\\renewcommand\\labelitemi{$\\vcenter{\\hbox{\\small$\\bullet$}}$}
+\\renewcommand\\labelitemi{$\\vcenter{\\hbox{$\\bullet$}}$}
 \\newenvironment{highlights}{\\begin{itemize}[topsep=0.10cm,parsep=0.10cm,partopsep=0pt,itemsep=0pt,leftmargin=0cm+10pt]}{\\end{itemize}}
 \\newenvironment{highlightsforbulletentries}{\\begin{itemize}[topsep=0.10cm,parsep=0.10cm,partopsep=0pt,itemsep=0pt,leftmargin=10pt]}{\\end{itemize}}
 \\newenvironment{onecolentry}{\\begin{adjustwidth}{0cm+0.00001cm}{0cm+0.00001cm}}{\\end{adjustwidth}}
@@ -306,6 +306,7 @@ const generateLatexContent = (
       \\underline{\\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{Portfolio}}}
 \\end{header}
 \\vspace{5pt-0.3cm}
+\\small
 
 ${formatSummary(professionalSummary)}
 
