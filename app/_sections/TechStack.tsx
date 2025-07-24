@@ -127,7 +127,7 @@ const TECH_ICONS = {
 } as const;
 
 const CATEGORIES = {
-   languages: [
+   "Languages": [
     "JavaScript",
     "TypeScript",
     "Python",
@@ -139,7 +139,7 @@ const CATEGORIES = {
     "HTML",
     "CSS",
   ],
-  frameworks: [
+  "Frameworks": [
     "ASP.NET Core",
     "Next.js",
     "React",
@@ -147,7 +147,7 @@ const CATEGORIES = {
     "Laravel",
     "Express.js",
   ],
-  tools: [
+  "Tools": [
     "Git",
     "Visual Studio Code",
     "Postman",
@@ -156,12 +156,12 @@ const CATEGORIES = {
     "IntelliJ IDEA",
     "Docker",
   ],
-  databases: [
+  "Databases": [
     "Supabase",
     "Prisma",
     "SQL Server"
   ],
-  libraries: [
+  "Libraries": [
     "Tailwind CSS",
     "Bootstrap",
     "Radix UI",
@@ -173,7 +173,7 @@ const TechCard = ({ tech }: { tech: string }) => {
   const Icon = TECH_ICONS[tech as keyof typeof TECH_ICONS];
 
   return (
-    <div className="flex flex-col items-center justify-center text-center bg-muted border-1 border-muted-foreground/30 shadow-sm rounded-lg p-3 hover:shadow-md transition-shadow">
+    <div className="flex flex-col items-center justify-center text-center bg-muted border-1 border-muted-foreground/30 shadow-sm rounded-lg p-3 hover:shadow-md transition-shadow mb-2">
       {Icon ? (
         <Icon size={40} className="mb-2 text-primary" />
       ) : (

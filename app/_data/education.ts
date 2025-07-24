@@ -18,7 +18,7 @@ const education = {
       institution: "University of the Philippines Cebu",
       degree: "BSc in Mathematics",
       period: "September 2022 - June 2025",
-      gwa: "1.88",
+      gwa: "1.89",
       details: [
         "Applied mathematical problem-solving to programming challenges",
         "Developed strong analytical thinking skills"
