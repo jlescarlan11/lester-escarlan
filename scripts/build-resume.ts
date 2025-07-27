@@ -24,6 +24,9 @@ interface EducationData {
   period: string;
   gwa?: string;
   details: string[];
+  technologies?: string[];
+  location?: string;
+  logo?: string;
 }
 
 interface ExperienceData {
@@ -31,9 +34,12 @@ interface ExperienceData {
   position: string;
   period: string;
   details: string[];
+  technologies?: string[];
+  location?: string;
+  logo?: string;
 }
 
-// Technical Skills Categories - Focused and Realistic for Junior Developer
+// Technical Skills Categories - Comprehensive list of most used tech tools
 const TECHNICAL_SKILLS_CATEGORIES = {
   languages: [
     "JavaScript",
@@ -41,39 +47,295 @@ const TECHNICAL_SKILLS_CATEGORIES = {
     "Python",
     "Java",
     "C#",
-    "C++", 
+    "C++",
+    "C",
+    "Go",
+    "Rust",
+    "PHP",
+    "Ruby",
+    "Swift",
+    "Kotlin",
+    "Dart",
+    "Scala",
+    "R",
+    "MATLAB",
+    "Shell/Bash",
+    "PowerShell",
     "SQL",
     "GraphQL",
     "HTML",
     "CSS",
+    "SCSS/Sass",
+    "Less"
   ],
   frameworks: [
-    "ASP.NET Core",
-    "Next.js",
+    // Frontend Frameworks/Libraries
     "React",
+    "Angular",
+    "Vue.js",
+    "Svelte",
+    "Next.js",
+    "Nuxt.js",
+    "Gatsby",
+    "Remix",
+    "SvelteKit",
+    
+    // Backend Frameworks
     "Node.js",
-    "Laravel",
     "Express.js",
-  ],
-  tools: [
-    "Git",
-    "Visual Studio Code",
-    "Postman",
-    "Vite",
-    "Figma",
-    "IntelliJ IDEA",
-    "Docker",
-  ],
-  databases: [
-    "Supabase",
-    "Prisma",
-    "SQL Server"
-  ],
-  libraries: [
+    "Nest.js",
+    "Fastify",
+    "Koa.js",
+    "ASP.NET Core",
+    "Spring Boot",
+    "Django",
+    "Flask",
+    "FastAPI",
+    "Laravel",
+    "Symfony",
+    "CodeIgniter",
+    "Ruby on Rails",
+    "Sinatra",
+    "Gin",
+    "Fiber",
+    "Echo",
+    
+    // Mobile Frameworks
+    "React Native",
+    "Flutter",
+    "Ionic",
+    "Xamarin",
+    "Cordova/PhoneGap",
+    
+    // CSS Frameworks/Libraries
     "Tailwind CSS",
     "Bootstrap",
+    "Material-UI",
+    "Ant Design",
+    "Chakra UI",
+    "Bulma",
+    "Foundation",
+    "Semantic UI",
     "Radix UI",
-    "Material-UI"
+    "Mantine",
+    "Styled Components",
+    "Emotion",
+    
+    // State Management
+    "Redux",
+    "MobX",
+    "Zustand",
+    "Recoil",
+    "Vuex",
+    "Pinia",
+    
+    // Testing Frameworks
+    "Jest",
+    "Mocha",
+    "Cypress",
+    "Playwright",
+    "Selenium",
+    "JUnit",
+    "PyTest",
+    "PHPUnit",
+    "RSpec"
+  ],
+  tools: [
+    // Version Control
+    "Git",
+    "GitHub",
+    "GitLab",
+    "Bitbucket",
+    "SVN",
+    
+    // IDEs/Editors
+    "Visual Studio Code",
+    "Visual Studio",
+    "IntelliJ IDEA",
+    "WebStorm",
+    "PyCharm",
+    "Eclipse",
+    "Xcode",
+    "Android Studio",
+    "Sublime Text",
+    "Vim",
+    "Emacs",
+    "Atom",
+    
+    // Containerization & Orchestration
+    "Docker",
+    "Kubernetes",
+    "Docker Compose",
+    "Podman",
+    
+    // Cloud Platforms
+    "AWS",
+    "Azure",
+    "Google Cloud Platform",
+    "DigitalOcean",
+    "Heroku",
+    "Vercel",
+    "Netlify",
+    "Railway",
+    "Render",
+    
+    // Databases
+    "PostgreSQL",
+    "MySQL",
+    "MongoDB",
+    "Redis",
+    "SQLite",
+    "SQL Server",
+    "Oracle",
+    "Cassandra",
+    "DynamoDB",
+    "Firebase",
+    "Supabase",
+    "PlanetScale",
+    "Neon",
+    
+    // Database Tools/ORMs
+    "Prisma",
+    "TypeORM",
+    "Sequelize",
+    "Mongoose",
+    "Eloquent",
+    "Hibernate",
+    "SQLAlchemy",
+    "Knex.js",
+    "Drizzle",
+    
+    // API Testing & Development
+    "Postman",
+    "Insomnia",
+    "Thunder Client",
+    "Swagger/OpenAPI",
+    "GraphQL Playground",
+    "Apollo Studio",
+    
+    // Build Tools & Bundlers
+    "Webpack",
+    "Vite",
+    "Parcel",
+    "Rollup",
+    "esbuild",
+    "Turbopack",
+    "Gulp",
+    "Grunt",
+    
+    // Package Managers
+    "npm",
+    "Yarn",
+    "pnpm",
+    "pip",
+    "Maven",
+    "Gradle",
+    "Composer",
+    "NuGet",
+    "Cargo",
+    
+    // CI/CD
+    "GitHub Actions",
+    "GitLab CI",
+    "Jenkins",
+    "CircleCI",
+    "Travis CI",
+    "Azure DevOps",
+    "TeamCity",
+    
+    // Monitoring & Analytics
+    "Sentry",
+    "LogRocket",
+    "New Relic",
+    "Datadog",
+    "Prometheus",
+    "Grafana",
+    "Google Analytics",
+    "Mixpanel",
+    
+    // Design Tools
+    "Figma",
+    "Adobe XD",
+    "Sketch",
+    "InVision",
+    "Canva",
+    "Adobe Photoshop",
+    "Adobe Illustrator",
+    
+    // Communication & Project Management
+    "Slack",
+    "Discord",
+    "Microsoft Teams",
+    "Jira",
+    "Trello",
+    "Asana",
+    "Notion",
+    "Linear",
+    "Monday.com",
+    
+    // Development Environments
+    "WSL",
+    "VMware",
+    "VirtualBox",
+    "Vagrant",
+    
+    // Terminal/Command Line Tools
+    "iTerm2",
+    "Windows Terminal",
+    "Hyper",
+    "Oh My Zsh",
+    "Powerlevel10k",
+    
+    // Authentication & Security
+    "Auth0",
+    "Firebase Auth",
+    "Supabase Auth",
+    "Okta",
+    "Keycloak",
+    "JWT",
+    "OAuth",
+    
+    // CMS & Headless CMS
+    "Strapi",
+    "Contentful",
+    "Sanity",
+    "Ghost",
+    "WordPress",
+    "Drupal",
+    "Directus",
+    
+    // E-commerce
+    "Shopify",
+    "WooCommerce",
+    "Magento",
+    "Stripe",
+    "PayPal",
+    
+    // Real-time Communication
+    "Socket.io",
+    "WebRTC",
+    "Pusher",
+    "Ably",
+    
+    // Search Engines
+    "Elasticsearch",
+    "Solr",
+    "Algolia",
+    "MeiliSearch",
+    
+    // Message Queues
+    "RabbitMQ",
+    "Apache Kafka",
+    "Amazon SQS",
+    "Bull Queue",
+    
+    // Documentation
+    "GitBook",
+    "Notion",
+    "Confluence",
+    "Docusaurus",
+    "VuePress",
+    "Storybook"
   ]
 };
 
@@ -134,17 +396,21 @@ const formatSummary = (summary: string) => `
 \\end{onecolentry}
 \\vspace{0.15cm}`;
 
-// UPDATED: Format education with gwa placeholder
+// UPDATED: Format education with new layout
 const formatEducation = (edu: EducationData): string => {
-  const gwaLine = edu.gwa ? `GWA: ${escapeLatex(edu.gwa)}` : `GWA: [Add if 3.0 or higher]`;
+  const technologies = edu.technologies && edu.technologies.length > 0 
+    ? ` | ${edu.technologies.map(escapeLatex).join(", ")}` 
+    : '';
+  const location = edu.location ? escapeLatex(edu.location) : '';
   
   return `
-    \\begin{twocolentry}{${escapeLatex(edu.period)}}
-    \\textbf{${escapeLatex(edu.institution)}} | ${escapeLatex(edu.degree)}\\\\
-    ${gwaLine}\\end{twocolentry}
+    \\begin{twocolentry}{\\textbf{${escapeLatex(edu.period)}}}
+    \\textbf{${escapeLatex(edu.degree)}}\\textit{${technologies}}\\end{twocolentry}
+    \\vspace{0.05cm}
+    \\begin{twocolentry}{${location}}
+    ${escapeLatex(edu.institution)}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        
         \\begin{highlights}
 ${edu.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\n")}
         \\end{highlights}
@@ -152,20 +418,29 @@ ${edu.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\
     \\vspace{0.15cm}`;
 };
 
-// UPDATED: Format experience with better structure
-const formatExperience = (exp: ExperienceData): string => `
-    \\begin{twocolentry}{${escapeLatex(exp.period)}}
-    \\textbf{${escapeLatex(exp.company)}} | ${escapeLatex(exp.position)}\\end{twocolentry}
+// UPDATED: Format experience with new layout
+const formatExperience = (exp: ExperienceData): string => {
+  const technologies = exp.technologies && exp.technologies.length > 0
+    ? ` | ${exp.technologies.map(escapeLatex).join(", ")}`
+    : '';
+  const location = exp.location ? escapeLatex(exp.location) : '';
+  
+  return `
+    \\begin{twocolentry}{\\textbf{${escapeLatex(exp.period)}}}
+    \\textbf{${escapeLatex(exp.position)}}\\textit{${technologies}}\\end{twocolentry}
+    \\vspace{0.05cm}
+    \\begin{twocolentry}{${location}}
+    ${escapeLatex(exp.company)}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        
-    \\begin{highlights}
-    ${exp.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\n")}
+        \\begin{highlights}
+${exp.details.map((d: string) => `            \\item ${escapeLatex(d)}`).join("\n")}
         \\end{highlights}
     \\end{onecolentry}
     \\vspace{0.15cm}`;
+};
 
-// UPDATED: Format projects with better tech display
+// UPDATED: Format projects with simplified layout
 const formatProject = (proj: ProjectData): string => {
   let dateString = "";
   if (proj.createdAt) {
@@ -187,9 +462,7 @@ const formatProject = (proj: ProjectData): string => {
     ? proj.technologies.map(escapeLatex).join(", ")
     : escapeLatex(proj.technologies || "");
 
-  const projectTitle = proj.link
-    ? `\\textbf{\\underline{\\href{${escapeLatex(proj.link)}}{${escapeLatex(proj.title)}}}}`
-    : `\\textbf{${escapeLatex(proj.title)}}`;
+  const projectTitle = `\\textbf{${escapeLatex(proj.title)}}`;
 
   // Enhanced description formatting with metric placeholders
   const descriptionBullets = proj.description
@@ -203,11 +476,10 @@ const formatProject = (proj: ProjectData): string => {
         .join("\n")
     : `            \\item ${escapeLatex(proj.description || "")}`;
 
-  return `    \\begin{twocolentry}{${escapeLatex(dateString)}}
+  return `    \\begin{twocolentry}{\\textbf{${escapeLatex(dateString)}}}
         ${projectTitle} | \\textit{${techsString}}\\end{twocolentry}
     \\vspace{0.10cm}
     \\begin{onecolentry}
-        
         \\begin{highlights}
 ${descriptionBullets}
         \\end{highlights}
@@ -215,18 +487,16 @@ ${descriptionBullets}
     \\vspace{0.15cm}`;
 };
 
-// UPDATED: Format tech categories with better organization
+// UPDATED: Format tech categories - simplified to 3 categories only
 const formatTechCategories = (categorized: Record<string, string[]>) => {
   const categoryLabels: Record<string, string> = {
     languages: "Languages",
-    frameworks: "Frameworks", 
-    tools: "Tools",
-    databases: "Databases",
-    libraries: "UI Libraries"
+    frameworks: "Frameworks/Libraries", 
+    tools: "Tools"
   };
 
-  // Ensure consistent order
-  const orderedCategories = ['languages', 'frameworks', 'tools', 'databases', 'libraries'];
+  // Only use the 3 specified categories
+  const orderedCategories = ['languages', 'frameworks', 'tools'];
   
   return orderedCategories
     .filter(category => categorized[category] && categorized[category].length > 0)
@@ -255,7 +525,7 @@ const generateLatexContent = (
 \\usepackage{enumitem}
 \\usepackage{fontawesome5}
 \\usepackage{amsmath}
-\\usepackage[pdftitle={${escapeLatex(header.name)} - Software Developer},pdfauthor={${escapeLatex(header.name)}},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,urlcolor=primaryColor]{hyperref}
+\\usepackage[pdftitle={${escapeLatex(header.name)} - Software Developer},pdfauthor={${escapeLatex(header.name)}},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,colorlinks=true,urlcolor=blue,linkcolor=blue]{hyperref}
 \\usepackage[pscoord]{eso-pic}
 \\usepackage{calc}
 \\usepackage{bookmark}
@@ -293,22 +563,34 @@ const generateLatexContent = (
 \\let\\hrefWithoutArrow\\href
 \\begin{document}
 \\begin{header}
-    \\fontsize{25pt}{25pt}\\selectfont \\textbf{${escapeLatex(header.name)}}
-    \\vspace{3pt}
-    \\\\ \\fontsize{12pt}{12pt}\\selectfont \\textbf{${escapeLatex(header.role)}}
-    \\vspace{5pt}
-    \\normalsize
-    \\mbox{${escapeLatex(contact.contactInfo.address)} \\kern 5.0pt | \\kern 5.0pt 
-      \\underline{\\hrefWithoutArrow{mailto:${escapeLatex(contact.contactInfo.email)}}{${escapeLatex(contact.contactInfo.email)}}} \\kern 5.0pt | \\kern 5.0pt 
-      \\underline{\\hrefWithoutArrow{tel:${escapeLatex(contact.contactInfo.phone)}}{${escapeLatex(contact.contactInfo.phone)}}} \\kern 5.0pt | \\kern 5.0pt 
-      \\underline{\\hrefWithoutArrow{${escapeLatex(contact.contactInfo.github)}}{GitHub}} \\kern 5.0pt | \\kern 5.0pt 
-      \\underline{\\hrefWithoutArrow{${escapeLatex(contact.contactInfo.linkedin)}}{LinkedIn}} \\kern 5.0pt | \\kern 5.0pt 
-      \\underline{\\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{Portfolio}}}
+    
+    % First line: Name on left, email and portfolio on right
+    \\begin{tabularx}{\\textwidth}{@{}X r@{}}
+        \\fontsize{20pt}{20pt}\\selectfont \\textbf{${escapeLatex(header.name)}} & 
+        \\fontsize{10pt}{10pt}\\selectfont 
+        Email: \\textcolor{blue}{\\underline{\\hrefWithoutArrow{mailto:${escapeLatex(contact.contactInfo.email)}}{${escapeLatex(contact.contactInfo.email)}}}} \\quad
+        Portfolio: \\textcolor{blue}{\\underline{\\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{lester-escarlan.vercel.app}}}
+    \\end{tabularx}
+    
+    \\vspace{2pt}
+    
+    % Second line: Address on left, github and linkedin on right
+    \\begin{tabularx}{\\textwidth}{@{}X r@{}}
+        \\fontsize{10pt}{10pt}\\selectfont ${escapeLatex(contact.contactInfo.address)} & 
+        \\fontsize{10pt}{10pt}\\selectfont
+        GitHub: \\textcolor{blue}{\\underline{\\hrefWithoutArrow{http://${escapeLatex(contact.contactInfo.github)}}{${escapeLatex(contact.contactInfo.github)}}}} \\quad
+        Linkedin: \\textcolor{blue}{\\underline{\\hrefWithoutArrow{http://www.${escapeLatex(contact.contactInfo.linkedin)}}{${escapeLatex(contact.contactInfo.linkedin)}}}}
+    \\end{tabularx}
 \\end{header}
 \\vspace{5pt-0.3cm}
 \\small
 
 ${formatSummary(professionalSummary)}
+
+\\section{Technical Skills}
+\\begin{onecolentry}
+${formatTechCategories(categorizedTechs)}
+\\end{onecolentry}
 
 \\section{Education}
 ${education.educationData.map(formatEducation).join("\n")}
@@ -318,11 +600,6 @@ ${experience.experienceData.map(formatExperience).join("\n")}
 
 \\section{Projects}
 ${projects.length === 0 ? "No projects found or server not running." : projects.map(formatProject).join("\n")}
-
-\\section{Technical Skills}
-\\begin{onecolentry}
-${formatTechCategories(categorizedTechs)}
-\\end{onecolentry}
 \\end{document}
 `;
 

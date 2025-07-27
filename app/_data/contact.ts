@@ -5,8 +5,8 @@ const contact = {
     email: "jlescarlan11@gmail.com",
     phone: "09957128195",
     address: "Cebu City, Philippines",
-    github: "https://github.com/jlescarlan11",
-    linkedin: "https://www.linkedin.com/in/john-lester-escarlan/",
+    github: "github.com/jlescarlan11",
+    linkedin: "linkedin.com/in/john-lester-escarlan/",
   },
 };
 

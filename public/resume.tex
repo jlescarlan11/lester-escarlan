@@ -11,7 +11,7 @@
 \usepackage{enumitem}
 \usepackage{fontawesome5}
 \usepackage{amsmath}
-\usepackage[pdftitle={John Lester Escarlan - Software Developer},pdfauthor={John Lester Escarlan},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,urlcolor=primaryColor]{hyperref}
+\usepackage[pdftitle={John Lester Escarlan - Software Developer},pdfauthor={John Lester Escarlan},pdfcreator={LaTeX with ResumeBuilder},colorlinks=true,colorlinks=true,urlcolor=blue,linkcolor=blue]{hyperref}
 \usepackage[pscoord]{eso-pic}
 \usepackage{calc}
 \usepackage{bookmark}
@@ -49,17 +49,24 @@
 \let\hrefWithoutArrow\href
 \begin{document}
 \begin{header}
-    \fontsize{25pt}{25pt}\selectfont \textbf{John Lester Escarlan}
-    \vspace{3pt}
-    \\ \fontsize{12pt}{12pt}\selectfont \textbf{Software Engineer}
-    \vspace{5pt}
-    \normalsize
-    \mbox{Cebu City, Philippines \kern 5.0pt | \kern 5.0pt 
-      \underline{\hrefWithoutArrow{mailto:jlescarlan11@gmail.com}{jlescarlan11@gmail.com}} \kern 5.0pt | \kern 5.0pt 
-      \underline{\hrefWithoutArrow{tel:09957128195}{09957128195}} \kern 5.0pt | \kern 5.0pt 
-      \underline{\hrefWithoutArrow{https://github.com/jlescarlan11}{GitHub}} \kern 5.0pt | \kern 5.0pt 
-      \underline{\hrefWithoutArrow{https://www.linkedin.com/in/john-lester-escarlan/}{LinkedIn}} \kern 5.0pt | \kern 5.0pt 
-      \underline{\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{Portfolio}}}
+    
+    % First line: Name on left, email and portfolio on right
+    \begin{tabularx}{\textwidth}{@{}X r@{}}
+        \fontsize{20pt}{20pt}\selectfont \textbf{John Lester Escarlan} & 
+        \fontsize{10pt}{10pt}\selectfont 
+        Email: \textcolor{blue}{\underline{\hrefWithoutArrow{mailto:jlescarlan11@gmail.com}{jlescarlan11@gmail.com}}} \quad
+        Portfolio: \textcolor{blue}{\underline{\hrefWithoutArrow{https://lester-escarlan.vercel.app/}{lester-escarlan.vercel.app}}}
+    \end{tabularx}
+    
+    \vspace{2pt}
+    
+    % Second line: Address on left, github and linkedin on right
+    \begin{tabularx}{\textwidth}{@{}X r@{}}
+        \fontsize{10pt}{10pt}\selectfont Cebu City, Philippines & 
+        \fontsize{10pt}{10pt}\selectfont
+        GitHub: \textcolor{blue}{\underline{\hrefWithoutArrow{http://github.com/jlescarlan11}{github.com/jlescarlan11}}} \quad
+        Linkedin: \textcolor{blue}{\underline{\hrefWithoutArrow{http://www.linkedin.com/in/john-lester-escarlan/}{linkedin.com/in/john-lester-escarlan/}}}
+    \end{tabularx}
 \end{header}
 \vspace{5pt-0.3cm}
 \small
@@ -72,14 +79,26 @@
 \end{onecolentry}
 \vspace{0.15cm}
 
+\section{Technical Skills}
+\begin{onecolentry}
+    \textbf{Languages:} C, C\#, C++, CSS, HTML, Java, JavaScript, Kotlin, PHP, PowerShell, Python, R, SQL, TypeScript \\
+    \vspace{0.05cm}
+    \textbf{Frameworks/Libraries:} ASP.NET Core, Bootstrap, Express.js, Laravel, Material-UI, Next.js, Node.js, React, Spring Boot, Tailwind CSS \\
+    \vspace{0.05cm}
+    \textbf{Tools:} esbuild, Git, GitHub, GitHub Actions, IntelliJ IDEA, JWT, MongoDB, MySQL, Netlify, npm, NuGet, OAuth, Oracle, pip, pnpm, PostgreSQL, Postman, Railway, Redis, Render, SQL Server, SQLite, Supabase, Vercel, Visual Studio, Visual Studio Code, Vite, Webpack \\
+    \vspace{0.05cm}
+
+\end{onecolentry}
+
 \section{Education}
 
-    \begin{twocolentry}{August 2025 - present}
-    \textbf{University of the Philippines Cebu} | BSc in Computer Science\\
-    GWA: 1.51\end{twocolentry}
+    \begin{twocolentry}{\textbf{August 2025 - present}}
+    \textbf{BSc in Computer Science}\textit{ | C, C++, Python, SQL, Javascript}\end{twocolentry}
+    \vspace{0.05cm}
+    \begin{twocolentry}{Cebu City, Philippines}
+    University of the Philippines Cebu\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
         \begin{highlights}
             \item Currently studying software engineering and system design
             \item Relevant coursework: Data Structures, Algorithms, Database Systems
@@ -87,12 +106,13 @@
     \end{onecolentry}
     \vspace{0.15cm}
 
-    \begin{twocolentry}{September 2022 - June 2025}
-    \textbf{University of the Philippines Cebu} | BSc in Mathematics\\
-    GWA: 1.89\end{twocolentry}
+    \begin{twocolentry}{\textbf{September 2022 - June 2025}}
+    \textbf{BSc in Mathematics}\textit{ | C, C++, SQL, R}\end{twocolentry}
+    \vspace{0.05cm}
+    \begin{twocolentry}{Cebu City, Philippines}
+    University of the Philippines Cebu\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
         \begin{highlights}
             \item Applied mathematical problem-solving to programming challenges
             \item Developed strong analytical thinking skills
@@ -102,40 +122,41 @@
 
 \section{Experience}
 
-    \begin{twocolentry}{June 2025 - Present}
-    \textbf{Wind's Gate Philippines} | Part Time Monitoring Team\end{twocolentry}
+    \begin{twocolentry}{\textbf{June 2025 - Present}}
+    \textbf{Part Time Monitoring Team}\textit{ | Slack, Java}\end{twocolentry}
+    \vspace{0.05cm}
+    \begin{twocolentry}{Cebu City, Philippines}
+    Wind's Gate Philippines\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
-    \begin{highlights}
-                \item Monitored system errors across databases and applications, preventing downtime and ensuring smooth operations
+        \begin{highlights}
+            \item Monitored system errors across databases and applications, preventing downtime and ensuring smooth operations
             \item Processed over 50 error reports daily, maintaining system stability and reducing potential disruptions
-            \item Translated Japanese error messages and documentation for development teams, facilitating effective communication and problem-solving
             \item Documented system failure patterns, aiding in the prevention of recurring issues and enhancing system reliability
         \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
 
-    \begin{twocolentry}{June 2025 - July 2025}
-    \textbf{Alliance Software Inc.} | Software Developer Intern\end{twocolentry}
+    \begin{twocolentry}{\textbf{June 2025 - July 2025}}
+    \textbf{Software Developer Intern}\textit{ | ASP, C\#, Bootstrap, Supabase}\end{twocolentry}
+    \vspace{0.05cm}
+    \begin{twocolentry}{Cebu City, Philippines}
+    Alliance Software Inc.\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
-    \begin{highlights}
-                \item Built a web application using C\# and ASP.NET for client projects
+        \begin{highlights}
+            \item Built a web application using C\# and ASP.NET for client projects
             \item Collaborated with the development team to deliver features on schedule, ensuring timely project completion and client satisfaction
             \item Adhered to coding standards and participated in code reviews, improving code quality and team collaboration
-            \item Completed assigned tasks within project deadlines, contributing to the successful and timely delivery of projects
         \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
 
 \section{Projects}
-    \begin{twocolentry}{July 2025}
-        \textbf{\underline{\href{https://github.com/jlescarlan11/Eduverse}{Eduverse}}} | \textit{C\#, .Net, Razor, Bootstrap, Supabase, Javascript}\end{twocolentry}
+    \begin{twocolentry}{\textbf{July 2025}}
+        \textbf{Eduverse} | \textit{C\#, .Net, Razor, Bootstrap, Supabase, Javascript}\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
         \begin{highlights}
             \item Built learning platform with user roles and course management features
             \item Implemented CRUD operations and invite-only registration system
@@ -143,11 +164,10 @@
         \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
-    \begin{twocolentry}{June 2025}
-        \textbf{\underline{\href{https://blog-it-gamma.vercel.app/}{Blog It}}} | \textit{Typescript, Tailwind CSS, Next.js, Radix UI, Prisma}\end{twocolentry}
+    \begin{twocolentry}{\textbf{June 2025}}
+        \textbf{Blog It} | \textit{Typescript, Tailwind CSS, Next.js, Radix UI, Prisma}\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
         \begin{highlights}
             \item Developed blogging platform with user profiles and social features
             \item Implemented post creation, editing, and commenting system
@@ -155,11 +175,10 @@
         \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
-    \begin{twocolentry}{June 2025}
-        \textbf{\underline{\href{https://talarama.vercel.app/}{Talarama}}} | \textit{Typescript, Tailwind CSS, Next.js, Daisy UI, Prisma}\end{twocolentry}
+    \begin{twocolentry}{\textbf{June 2025}}
+        \textbf{Talarama} | \textit{Typescript, Tailwind CSS, Next.js, Daisy UI, Prisma}\end{twocolentry}
     \vspace{0.10cm}
     \begin{onecolentry}
-        
         \begin{highlights}
             \item Created secure application with user authentication and data management
             \item Built responsive UI with modern design patterns
@@ -167,19 +186,4 @@
         \end{highlights}
     \end{onecolentry}
     \vspace{0.15cm}
-
-\section{Technical Skills}
-\begin{onecolentry}
-    \textbf{Languages:} C\#, C++, CSS, HTML, Java, JavaScript, Python, SQL, TypeScript \\
-    \vspace{0.05cm}
-    \textbf{Frameworks:} ASP.NET Core, Express.js, Laravel, Next.js, Node.js, React \\
-    \vspace{0.05cm}
-    \textbf{Tools:} Git, IntelliJ IDEA, Postman, Visual Studio Code, Vite \\
-    \vspace{0.05cm}
-    \textbf{Databases:} SQL Server, Supabase \\
-    \vspace{0.05cm}
-    \textbf{UI Libraries:} Bootstrap, Material-UI, Tailwind CSS \\
-    \vspace{0.05cm}
-
-\end{onecolentry}
 \end{document}
