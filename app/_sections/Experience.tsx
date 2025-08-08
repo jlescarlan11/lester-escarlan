@@ -8,7 +8,7 @@ const ExperienceSection = () => (
       section={experience.section}
       description={experience.sectionDescription}
     />
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="spave-y-6">
       {experience.experienceData.map((item, index) => (
         <SharedCard
           key={index}

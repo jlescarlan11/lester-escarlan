@@ -122,23 +122,26 @@
 }
 
 main {
-  @apply max-w-4xl mx-auto px-4;
+  @apply max-w-5xl mx-auto px-4;
 }
 
-p {
-  @apply text-sm leading-7 lg:text-base mb-4 text-pretty;
+.badge,
+p,
+li {
+  @apply text-sm leading-7 lg:text-lg! text-pretty;
+}
+
+h1,
+h2 {
+  @apply scroll-m-20 text-4xl tracking-tight lg:text-7xl;
 }
 
 h1 {
-  @apply scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl;
-}
-
-h2 {
-  @apply scroll-m-20 text-3xl font-bold tracking-tight lg:text-4xl pb-2 transition-colors first:mt-0;
+  @apply font-bold;
 }
 
 h3 {
-  @apply scroll-m-20 text-xl font-semibold tracking-tight lg:text-2xl;
+  @apply scroll-m-20 text-xl tracking-tight lg:text-3xl;
 }
 
 .card-title {

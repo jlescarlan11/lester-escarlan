@@ -2,8 +2,9 @@ const about = {
   section: "About Me",
   sectionDescription: "Who is John Lester?",
   aboutMe: [
-    "Computer Science student at UP Cebu with practical experience in full-stack development. I build web applications using React, Node.js, and work with databases to create functional solutions that solve real problems.",
-    "My background in Mathematics provides strong analytical thinking for problem-solving and algorithm development. I have professional experience in system monitoring, error diagnosis, and web application development using C# and ASP.NET in team environments.",
+    "I am John Lester Escarlan, a Computer Science student at University of the Philippines Cebu. I build web applications with focus on clean, maintainable code.",
+    "Currently, I work part-time at Wind's Gate Philippines, where I analyze system logs and identify root causes of errors - whether they're database connection issues, server crashes, or application bugs. This role has sharpened my debugging skills and taught me to quickly diagnose problems across the tech stack.",
+    "I enjoy working with Next.js and Spring Boot, and I'm always looking for ways to write code that other developers can easily understand and extend.",
   ],
   image: {
     src: "/profile-pic.jpg",

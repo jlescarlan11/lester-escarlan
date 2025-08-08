@@ -68,13 +68,13 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
             <Badge
               key={technology}
               variant="secondary"
-              className="text-xs whitespace-nowrap"
+              className="badge whitespace-nowrap"
             >
               {technology.toLowerCase()}
             </Badge>
           ))}
         {visibleCount < technologies.length && (
-          <Badge variant="secondary" className="text-xs whitespace-nowrap">
+          <Badge variant="secondary" className="whitespace-nowrap">
             +{technologies.length - visibleCount}
           </Badge>
         )}
@@ -83,11 +83,6 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
       <div
         ref={measureRef}
         className="absolute left-0 top-0 opacity-0 pointer-events-none"
-        style={{
-          visibility: "hidden",
-          left: "-9999px",
-          height: 0,
-        }}
         aria-hidden="true"
       >
         {technologies
@@ -97,7 +92,7 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
             <Badge
               key={technology}
               variant="secondary"
-              className="text-xs whitespace-nowrap"
+              className=" whitespace-nowrap"
             >
               {technology}
             </Badge>

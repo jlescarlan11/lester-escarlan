@@ -8,7 +8,7 @@ const EducationSection = () => (
       section={education.section}
       description={education.sectionDescription}
     />
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-6">
       {education.educationData.map((item, index) => (
         <SharedCard
           key={index}

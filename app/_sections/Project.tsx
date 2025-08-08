@@ -76,7 +76,7 @@ const ProjectSection = () => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
             {projects.map((project) => (
               <SharedCard
                 key={project.id}
@@ -101,9 +101,11 @@ const ProjectSection = () => {
               rel="noopener noreferrer"
               className="text-primary relative inline-block group text-sm"
             >
-              <div className="flex items-center gap-2">
-                View more projects{" "}
-                <LuArrowRight className="text-primary mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="flex items-center gap-2">
+                  View more projects{" "}
+                  <LuArrowRight className="text-primary mt-0.5 flex-shrink-0" />
+                </p>
               </div>
               <span className="absolute left-0 -bottom-0.5 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
