@@ -132,7 +132,7 @@ li {
 }
 
 span {
-  @apply font-mono text-[0.5rem] text-muted-foreground;
+  @apply font-mono text-xs text-muted-foreground;
 }
 
 h1,
