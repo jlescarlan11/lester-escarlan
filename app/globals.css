@@ -128,7 +128,7 @@ main {
 .badge,
 p,
 li {
-  @apply text-sm leading-7 lg:text-base! text-pretty;
+  @apply text-base leading-7 lg:text-lg text-pretty;
 }
 
 span {
