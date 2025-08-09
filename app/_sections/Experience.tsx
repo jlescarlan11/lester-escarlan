@@ -8,19 +8,18 @@ const ExperienceSection = () => (
       section={experience.section}
       description={experience.sectionDescription}
     />
-    <div className="spave-y-6">
-      {experience.experienceData.map((item, index) => (
-        <SharedCard
-          key={index}
-          logo={item.logo}
-          mainTitle={item.position}
-          subTitle={item.company}
-          period={item.period}
-          details={item.details}
-          technologies={item.technologies}
-        />
-      ))}
-    </div>
+
+    {experience.experienceData.map((item, index) => (
+      <SharedCard
+        key={index}
+        logo={item.logo}
+        mainTitle={item.position}
+        subTitle={item.company}
+        period={item.period}
+        details={item.details}
+        technologies={item.technologies}
+      />
+    ))}
   </section>
 );
 

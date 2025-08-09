@@ -1,6 +1,6 @@
 const experience = {
   section: "Work Experience",
-  sectionDescription: "Places I've worked and contributed to.",
+  sectionDescription: "Who I have worked with?",
   experienceData: [
     {
       company: "Wind's Gate Philippines",
@@ -10,7 +10,7 @@ const experience = {
       details: [
         "Monitored system errors across databases and applications, preventing downtime and ensuring smooth operations",
         "Processed over 50 error reports daily, maintaining system stability and reducing potential disruptions",
-        "Documented system failure patterns, aiding in the prevention of recurring issues and enhancing system reliability"
+        "Documented system failure patterns, aiding in the prevention of recurring issues and enhancing system reliability",
       ],
       technologies: ["Slack", "Java"],
       logo: "/windsgate-logo.svg",

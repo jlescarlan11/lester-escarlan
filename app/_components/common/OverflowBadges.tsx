@@ -68,7 +68,7 @@ const OverflowBadges: React.FC<OverflowBadgesProps> = ({
             <Badge
               key={technology}
               variant="secondary"
-              className="badge whitespace-nowrap"
+              className="whitespace-nowrap"
             >
               {technology.toLowerCase()}
             </Badge>

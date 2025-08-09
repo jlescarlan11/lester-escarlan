@@ -8,19 +8,18 @@ const EducationSection = () => (
       section={education.section}
       description={education.sectionDescription}
     />
-    <div className="space-y-6">
-      {education.educationData.map((item, index) => (
-        <SharedCard
-          key={index}
-          logo={item.logo}
-          mainTitle={item.degree}
-          subTitle={item.institution}
-          period={item.period}
-          details={item.details}
-          technologies={item.technologies}
-        />
-      ))}
-    </div>
+
+    {education.educationData.map((item, index) => (
+      <SharedCard
+        key={index}
+        logo={item.logo}
+        mainTitle={item.degree}
+        subTitle={item.institution}
+        period={item.period}
+        details={item.details}
+        technologies={item.technologies}
+      />
+    ))}
   </section>
 );
 

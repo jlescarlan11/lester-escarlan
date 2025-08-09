@@ -76,24 +76,23 @@ const ProjectSection = () => {
         </div>
       ) : (
         <>
-          <div className="space-y-6">
-            {projects.map((project) => (
-              <SharedCard
-                key={project.id}
-                logo={project.preview || "/alliance-logo.svg"}
-                mainTitle={project.title}
-                subTitle={project.status}
-                period={project.createdAt}
-                details={project.description
-                  .split(".")
-                  .map((s) => s.trim())
-                  .filter(Boolean)
-                  .map((s) => s + ".")}
-                technologies={project.technologies}
-                link={project.link}
-              />
-            ))}
-          </div>
+          {projects.map((project) => (
+            <SharedCard
+              key={project.id}
+              logo={project.preview || "/alliance-logo.svg"}
+              mainTitle={project.title}
+              subTitle={project.status}
+              period={project.createdAt}
+              details={project.description
+                .split(".")
+                .map((s) => s.trim())
+                .filter(Boolean)
+                .map((s) => s + ".")}
+              technologies={project.technologies}
+              link={project.link}
+            />
+          ))}
+
           <div className="text-start mt-12">
             <Link
               href="/project"

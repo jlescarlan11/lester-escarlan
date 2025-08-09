@@ -38,21 +38,23 @@ const SharedCard = ({
   return (
     <Card
       className={clsx(
-        "flex sm:grid grid-cols-5 gap-4 lg:gap-8 bg-transparent border-none shadow-none",
+        "flex sm:grid grid-cols-5 gap-4 lg:gap-8 bg-transparent border-none shadow-none mb-20",
         className
       )}
     >
-      <div className="grid-cols-1 overflow-hidden border  aspect-square max-w-fit">
+      {/* Fixed image container with aspect-square */}
+      <div className="flex-shrink-0 sm:col-span-1 w-1/2 sm:w-full aspect-square relative border border-muted shadow-sm overflow-hidden">
         <Image
           src={logo}
           alt={`${mainTitle} logo`}
-          width={0}
-          height={0}
-          className="w-[300px] sm:w-full aspect-square"
+          fill
+          className="object-cover"
           loading="lazy"
+          sizes="(max-width: 640px) 80px, 96px"
         />
       </div>
-      <div className="col-span-4">
+
+      <div className="flex-1 sm:col-span-4 min-w-0">
         <div className="flex gap-4 items-start">
           <div className="flex-1 min-w-0">
             <HeadingHiglight>{subTitle}</HeadingHiglight>

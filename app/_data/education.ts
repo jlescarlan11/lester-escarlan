@@ -1,6 +1,6 @@
 const education = {
   section: "My Education",
-  sectionDescription: "What I've been studying.",
+  sectionDescription: "WHERE I HAVE GAINED MY FOUNDATION?",
   educationData: [
     {
       institution: "University of the Philippines Cebu",
